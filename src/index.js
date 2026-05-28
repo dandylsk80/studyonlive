@@ -212,12 +212,15 @@ a{color:inherit;text-decoration:none}
 /* 헤더 */
 header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
   background:rgba(251,252,255,.82);border-bottom:1px solid var(--line)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:128px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em}
-.logo .dot{width:11px;height:11px;border-radius:50%;background:var(--brand);
-  box-shadow:0 0 0 4px var(--glow);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 4px var(--glow)}50%{box-shadow:0 0 0 8px transparent}}
+.logo .live-mark{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:900;
+  color:#fff;background:#e63946;padding:4px 9px;border-radius:6px;letter-spacing:.05em}
+.logo .live-mark::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;
+  box-shadow:0 0 0 0 rgba(255,255,255,.6);animation:livepulse 1.6s infinite}
+@keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}100%{box-shadow:0 0 0 6px transparent}}
 .logo b{color:var(--brand)}
+.logo .on{color:#e63946;font-weight:900}
 .nav-cta{font-size:14px;font-weight:700;padding:9px 18px;border-radius:999px;
   background:var(--ink);color:#fff;transition:.2s}
 .nav-cta:hover{transform:translateY(-1px)}
@@ -597,6 +600,207 @@ footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:40px;back
 .bcard .h{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px}
 .bcard .h .e{font-size:20px}
 .bcard p{font-size:13.5px;color:var(--muted);margin-top:9px;line-height:1.6}
+
+/* ═══════════════════════════════════════════════════════════ */
+/* 메인 페이지 전용 사이버 다크 스타일                          */
+/* ═══════════════════════════════════════════════════════════ */
+.home{--hbg:#050818;--hink:#fff;--hmuted:#8390ab;--hbrand:#5a8dff;--hbrand2:#b347ff;--hacc:#00ffd0;--hneon:#ff2bd6;--hline:rgba(120,180,255,.12);
+  background:var(--hbg);color:var(--hink);position:relative;overflow:hidden}
+.home .h-bg{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(40% 50% at 15% 20%,rgba(0,255,208,.18),transparent 60%),
+    radial-gradient(50% 50% at 85% 30%,rgba(179,71,255,.20),transparent 60%),
+    radial-gradient(40% 50% at 50% 100%,rgba(255,43,214,.10),transparent 60%),
+    linear-gradient(180deg,#050818,#0a0a25 50%,#050818)}
+.home .h-grid-floor{position:absolute;inset:0;pointer-events:none;perspective:600px;overflow:hidden;z-index:0}
+.home .h-grid-floor::before{content:"";position:absolute;left:-20%;right:-20%;top:50%;bottom:-20%;
+  background-image:linear-gradient(rgba(0,255,208,.20) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,208,.20) 1px,transparent 1px);
+  background-size:60px 60px;transform:rotateX(60deg);
+  mask-image:linear-gradient(180deg,transparent,#000 30%,#000 70%,transparent);
+  animation:hfloor 12s linear infinite}
+@keyframes hfloor{from{background-position:0 0}to{background-position:0 60px}}
+.home .h-grid-top{position:absolute;inset:0;pointer-events:none;opacity:.4;z-index:0;
+  background-image:linear-gradient(rgba(179,71,255,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(90,141,255,.10) 1px,transparent 1px);
+  background-size:50px 50px;mask-image:radial-gradient(70% 55% at 50% 30%,#000,transparent)}
+.home .h-scan{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.home .h-scan::before,.home .h-scan::after{content:"";position:absolute;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--hacc),transparent);box-shadow:0 0 14px var(--hacc);
+  animation:hscan 7s linear infinite}
+.home .h-scan::after{background:linear-gradient(90deg,transparent,var(--hneon),transparent);
+  box-shadow:0 0 14px var(--hneon);animation:hscan 9s linear infinite reverse;animation-delay:-2s}
+@keyframes hscan{0%{top:-2%}100%{top:102%}}
+
+/* 사이버 히어로 */
+.home .h-hero{position:relative;z-index:2;padding:80px 24px;min-height:680px}
+.home .h-wrap{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+@media(max-width:880px){.home .h-wrap{grid-template-columns:1fr;gap:50px}}
+.home .h-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,208,.08);
+  border:1px solid rgba(0,255,208,.45);padding:7px 14px;border-radius:99px;font-size:12.5px;font-weight:700;
+  color:var(--hacc);letter-spacing:.05em;font-family:'JetBrains Mono',ui-monospace,monospace;
+  box-shadow:0 0 20px rgba(0,255,208,.25)}
+.home .h-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--hacc);
+  box-shadow:0 0 12px var(--hacc);animation:hp 1.5s infinite}
+@keyframes hp{0%,100%{opacity:1}50%{opacity:.4}}
+.home .h-h1{font-size:62px;font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-top:20px;
+  text-shadow:0 0 40px rgba(90,141,255,.3);color:#fff}
+@media(max-width:880px){.home .h-h1{font-size:46px}}
+.home .h-h1 .g{background:linear-gradient(100deg,var(--hacc),var(--hbrand),var(--hneon));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 24px rgba(179,71,255,.4))}
+.home .h-sub{font-size:17px;color:var(--hmuted);margin-top:20px;max-width:480px;line-height:1.7}
+.home .h-ctas{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+.home .h-btn{font-size:14.5px;font-weight:800;padding:14px 26px;border-radius:12px;cursor:pointer;border:none;
+  display:inline-flex;align-items:center;gap:8px;transition:.2s;font-family:inherit;color:#fff;text-decoration:none}
+.home .h-btn-p{background:linear-gradient(100deg,var(--hbrand),var(--hbrand2));
+  box-shadow:0 0 30px rgba(179,71,255,.4),0 12px 30px -10px var(--hbrand)}
+.home .h-btn-p:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(179,71,255,.6)}
+.home .h-btn-o{background:rgba(255,255,255,.04);border:1px solid var(--hline);backdrop-filter:blur(8px)}
+.home .h-btn-o:hover{background:rgba(255,255,255,.08);border-color:var(--hacc)}
+.home .h-stats{display:flex;gap:24px;margin-top:40px;padding-top:30px;border-top:1px solid var(--hline);flex-wrap:wrap}
+.home .h-stats .s b{font-size:24px;font-weight:900;letter-spacing:-.02em;color:#fff;font-family:'JetBrains Mono',ui-monospace,monospace;
+  text-shadow:0 0 14px rgba(0,255,208,.4)}
+.home .h-stats .s span{display:block;font-size:12px;color:var(--hmuted);margin-top:3px;font-weight:600}
+
+/* 우측 실사 + 떠다니는 카드 */
+.home .h-visual{position:relative}
+.home .h-img{position:relative;border-radius:18px;overflow:hidden;
+  box-shadow:0 0 40px rgba(0,255,208,.15),0 0 80px rgba(179,71,255,.15),0 40px 80px -20px rgba(0,0,0,.7);
+  transform:perspective(1400px) rotateY(-4deg) rotateX(2deg);transition:.4s;
+  border:1px solid rgba(0,255,208,.25)}
+.home .h-img:hover{transform:perspective(1400px) rotateY(-2deg) rotateX(1deg)}
+.home .h-img img{width:100%;display:block;aspect-ratio:4/5;object-fit:cover;filter:saturate(.85) contrast(1.05)}
+.home .h-img::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 30%,rgba(5,8,24,.7)),linear-gradient(120deg,rgba(0,255,208,.15),transparent 50%,rgba(179,71,255,.15))}
+.home .h-fc{position:absolute;background:rgba(10,15,40,.85);backdrop-filter:blur(14px);
+  border:1px solid rgba(0,255,208,.25);border-radius:14px;padding:14px 18px;
+  box-shadow:0 0 25px rgba(0,255,208,.15),0 18px 40px -10px rgba(0,0,0,.6);z-index:3;color:#fff}
+.home .h-fc-live{top:32px;left:-24px;display:flex;align-items:center;gap:10px;border-color:rgba(230,57,70,.5);box-shadow:0 0 25px rgba(230,57,70,.3)}
+.home .h-fc-live .ld{width:9px;height:9px;border-radius:50%;background:#ff3b5c;box-shadow:0 0 14px #ff3b5c;animation:hp 1.2s infinite}
+.home .h-fc-live b{font-size:12px;font-weight:900;letter-spacing:.08em}
+.home .h-fc-live span{font-size:12px;color:var(--hmuted);margin-left:2px}
+.home .h-fc-class{bottom:90px;left:-44px;min-width:240px}
+.home .h-fc-class .top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.home .h-fc-class .av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--hbrand),var(--hbrand2));
+  display:grid;place-items:center;font-size:14px;font-weight:900;color:#fff;box-shadow:0 0 16px rgba(179,71,255,.5)}
+.home .h-fc-class .who b{font-size:13px;font-weight:800;display:block}
+.home .h-fc-class .who span{font-size:11.5px;color:var(--hmuted)}
+.home .h-fc-class .tmr{margin-left:auto;font-size:11px;color:var(--hacc);font-family:'JetBrains Mono',monospace;
+  background:rgba(0,255,208,.1);padding:3px 8px;border-radius:5px;border:1px solid rgba(0,255,208,.3)}
+.home .h-fc-class .meta{font-size:11.5px;color:var(--hmuted);display:flex;gap:14px;padding-top:8px;border-top:1px solid var(--hline)}
+.home .h-fc-class .meta b{color:#fff;font-weight:700}
+.home .h-fc-rate{top:50%;right:-30px;display:flex;align-items:center;gap:11px;border-color:rgba(255,43,214,.3);box-shadow:0 0 25px rgba(255,43,214,.2)}
+.home .h-fc-rate .score{font-size:28px;font-weight:900;background:linear-gradient(100deg,var(--hacc),var(--hneon));
+  -webkit-background-clip:text;background-clip:text;color:transparent;font-family:'JetBrains Mono',monospace}
+.home .h-fc-rate .stars{font-size:14px;color:#febc2e;filter:drop-shadow(0 0 6px rgba(254,188,46,.5))}
+.home .h-fc-rate .lbl{font-size:11px;color:var(--hmuted);margin-top:1px}
+.home .h-fc-stats{bottom:-18px;right:30px;display:flex;align-items:center;gap:10px}
+.home .h-fc-stats .ic{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--hbrand),var(--hbrand2));
+  display:grid;place-items:center;font-size:15px;color:#fff;font-weight:900;font-family:monospace;box-shadow:0 0 16px rgba(90,141,255,.5)}
+.home .h-fc-stats b{font-size:14px;font-weight:900;display:block}
+.home .h-fc-stats span{font-size:11.5px;color:var(--hmuted)}
+@media(max-width:880px){.home .h-fc{display:none}}
+
+/* 사이버 섹션 공통 */
+.home .h-section{position:relative;z-index:2;padding:80px 24px}
+.home .h-section .h-wrap2{max-width:1160px;margin:0 auto}
+.home .h-head{text-align:center;margin-bottom:46px}
+.home .h-head .k{font-size:13px;font-weight:800;color:var(--hacc);letter-spacing:.15em;font-family:'JetBrains Mono',monospace;
+  display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid rgba(0,255,208,.3);border-radius:99px;
+  background:rgba(0,255,208,.05);box-shadow:0 0 20px rgba(0,255,208,.15)}
+.home .h-head .k::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--hacc);box-shadow:0 0 10px var(--hacc)}
+.home .h-head h2{font-size:42px;font-weight:900;letter-spacing:-.03em;margin-top:16px;color:#fff;text-shadow:0 0 30px rgba(90,141,255,.3)}
+.home .h-head h2 .g{background:linear-gradient(100deg,var(--hacc),var(--hbrand),var(--hneon));-webkit-background-clip:text;background-clip:text;color:transparent}
+.home .h-head p{color:var(--hmuted);margin-top:10px;font-size:13px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+.home .h-head p::before{content:"// "}
+
+/* 과목 섹션 (인터랙티브) */
+.home .h-subj{display:grid;grid-template-columns:1.1fr 1fr;gap:18px}
+@media(max-width:780px){.home .h-subj{grid-template-columns:1fr}}
+.home .h-feat{background:linear-gradient(135deg,#0b1020,#1a2238);color:#fff;border:1px solid var(--hline);
+  border-radius:24px;padding:36px;display:flex;flex-direction:column;justify-content:space-between;
+  min-height:340px;cursor:pointer;transition:.2s;position:relative;overflow:hidden;
+  box-shadow:0 0 40px rgba(0,255,208,.1)}
+.home .h-feat:hover{transform:translateY(-4px);box-shadow:0 0 60px rgba(0,255,208,.2)}
+.home .h-feat .bg-text{position:absolute;right:-40px;bottom:-70px;font-size:280px;font-weight:900;
+  color:rgba(255,255,255,.04);line-height:1;transition:.4s}
+.home .h-feat::after{content:"";position:absolute;inset:0;opacity:.08;pointer-events:none;
+  background-image:linear-gradient(rgba(0,255,208,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,208,.5) 1px,transparent 1px);
+  background-size:32px 32px}
+.home .h-feat>*{position:relative;z-index:1}
+.home .h-feat .top{display:flex;align-items:center;gap:10px}
+.home .h-feat .live{font-size:11px;font-weight:900;color:#fff;background:#e63946;padding:4px 10px;border-radius:5px;letter-spacing:.05em;display:inline-flex;align-items:center;gap:5px}
+.home .h-feat .live::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;animation:hp 1.2s infinite}
+.home .h-feat .tag{font-size:12px;font-weight:800;color:var(--hacc);letter-spacing:.12em;font-family:'JetBrains Mono',monospace}
+.home .h-feat h3{font-size:54px;font-weight:900;letter-spacing:-.04em;margin-top:18px;line-height:1;transition:.3s}
+.home .h-feat .sub{font-size:15px;color:rgba(255,255,255,.75);margin-top:12px;max-width:340px;line-height:1.6}
+.home .h-feat .meta{display:flex;gap:18px;margin-top:22px;flex-wrap:wrap}
+.home .h-feat .meta div{font-size:13px;color:rgba(255,255,255,.7)}
+.home .h-feat .meta b{font-size:16px;font-weight:900;color:#fff;display:block;font-family:'JetBrains Mono',monospace}
+.home .h-feat .go{font-size:14px;font-weight:800;display:inline-flex;align-items:center;gap:8px;
+  background:#fff;color:#0b1020;padding:12px 20px;border-radius:10px;width:fit-content;margin-top:22px;text-decoration:none}
+.home .h-fade{animation:hfade .35s ease}
+@keyframes hfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.home .h-list{background:rgba(10,15,40,.6);backdrop-filter:blur(10px);border:1px solid var(--hline);border-radius:24px;padding:14px 24px;
+  display:flex;flex-direction:column;justify-content:center}
+.home .h-item{display:flex;align-items:center;gap:18px;padding:20px 0;border-bottom:1px dashed var(--hline);cursor:pointer;
+  position:relative;transition:.18s;color:#fff}
+.home .h-item:last-child{border-bottom:0}
+.home .h-item .dot{width:10px;height:10px;border-radius:50%;background:var(--hline);transition:.3s;flex:0 0 10px}
+.home .h-item:hover,.home .h-item.act{padding-left:8px}
+.home .h-item:hover .dot,.home .h-item.act .dot{background:var(--hacc);box-shadow:0 0 0 6px rgba(0,255,208,.15);transform:scale(1.3)}
+.home .h-item:hover .nm,.home .h-item.act .nm{color:var(--hacc)}
+.home .h-item .nm{font-size:22px;font-weight:800;letter-spacing:-.02em;flex:1;transition:.2s}
+.home .h-item .nm small{font-size:13px;font-weight:600;color:var(--hmuted);margin-left:10px}
+.home .h-item .live{font-size:10px;font-weight:900;color:#fff;background:#e63946;padding:3px 8px;border-radius:5px}
+.home .h-item .arr{font-size:18px;opacity:.3;transition:.2s}
+.home .h-item:hover .arr,.home .h-item.act .arr{opacity:1;transform:translateX(4px)}
+
+/* WHY 카드 (사이버) */
+.home .h-why{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:880px){.home .h-why{grid-template-columns:1fr}}
+.home .h-card{position:relative;background:rgba(10,15,40,.6);backdrop-filter:blur(10px);
+  border:1px solid var(--hline);border-radius:18px;padding:34px 28px;overflow:hidden;transition:.3s}
+.home .h-card:hover{transform:translateY(-6px);background:rgba(10,15,40,.85);box-shadow:0 0 40px rgba(0,255,208,.15)}
+.home .h-card .cn{position:absolute;width:24px;height:24px;opacity:.6}
+.home .h-card .cn.tl{top:10px;left:10px;border-top:1px solid var(--hacc);border-left:1px solid var(--hacc)}
+.home .h-card .cn.tr{top:10px;right:10px;border-top:1px solid var(--hneon);border-right:1px solid var(--hneon)}
+.home .h-card .cn.bl{bottom:10px;left:10px;border-bottom:1px solid var(--hneon);border-left:1px solid var(--hneon)}
+.home .h-card .cn.br{bottom:10px;right:10px;border-bottom:1px solid var(--hacc);border-right:1px solid var(--hacc)}
+.home .h-card .no{font-size:11px;font-weight:700;color:var(--hmuted);font-family:'JetBrains Mono',monospace;letter-spacing:.1em;margin-bottom:18px}
+.home .h-card .no b{color:var(--hacc);text-shadow:0 0 8px var(--hacc)}
+.home .h-card .iconbox{width:64px;height:64px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(0,255,208,.1),rgba(179,71,255,.1));
+  border:1px solid rgba(0,255,208,.3);display:grid;place-items:center;margin-bottom:20px;
+  box-shadow:inset 0 0 20px rgba(0,255,208,.1),0 0 20px rgba(0,255,208,.15)}
+.home .h-card .iconbox svg{width:32px;height:32px}
+.home .h-card:nth-child(2) .iconbox{border-color:rgba(179,71,255,.3);box-shadow:inset 0 0 20px rgba(179,71,255,.1),0 0 20px rgba(179,71,255,.15)}
+.home .h-card:nth-child(3) .iconbox{border-color:rgba(255,43,214,.3);box-shadow:inset 0 0 20px rgba(255,43,214,.1),0 0 20px rgba(255,43,214,.15)}
+.home .h-card h3{font-size:22px;font-weight:900;color:#fff;margin-bottom:10px}
+.home .h-card p{font-size:14.5px;color:var(--hmuted);line-height:1.7}
+.home .h-card .data{display:flex;align-items:center;gap:8px;margin-top:18px;padding-top:16px;
+  border-top:1px dashed var(--hline);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--hacc)}
+.home .h-card .data b{color:#fff}
+.home .h-card .data .ld{width:6px;height:6px;border-radius:50%;background:var(--hacc);box-shadow:0 0 8px var(--hacc);animation:hp 1.5s infinite}
+.home .h-card:nth-child(2) .data{color:var(--hbrand2)}
+.home .h-card:nth-child(2) .data .ld{background:var(--hbrand2);box-shadow:0 0 8px var(--hbrand2)}
+.home .h-card:nth-child(3) .data{color:var(--hneon)}
+.home .h-card:nth-child(3) .data .ld{background:var(--hneon);box-shadow:0 0 8px var(--hneon)}
+
+/* 지역 섹션 (다크) */
+.home .h-rtabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:26px}
+.home .h-rt{font-size:14px;font-weight:700;padding:9px 16px;border-radius:99px;background:rgba(10,15,40,.6);
+  border:1px solid var(--hline);color:#fff;cursor:pointer;transition:.18s;font-family:inherit}
+.home .h-rt:hover,.home .h-rt.on{background:var(--hbrand);color:#fff;border-color:var(--hbrand);box-shadow:0 0 14px rgba(90,141,255,.5)}
+.home .h-rlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.home .h-rlist a{font-size:14px;padding:11px 14px;border-radius:12px;background:rgba(10,15,40,.6);backdrop-filter:blur(6px);
+  border:1px solid var(--hline);color:var(--hmuted);font-weight:600;transition:.16s;text-decoration:none;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home .h-rlist a:hover{color:var(--hacc);border-color:var(--hacc);background:rgba(0,255,208,.08)}
+
+/* 메인일 때 헤더 다크 처리 */
+body.dark-home header.nav{background:rgba(5,8,24,.7);border-bottom-color:var(--hline);backdrop-filter:blur(14px)}
+body.dark-home header.nav .logo{color:#fff}
+body.dark-home header.nav .logo .on{color:#ff5577}
+body.dark-home header.nav .nav-cta{background:#fff;color:#0b1020}
 `;
 
 // ─────────────────────────────────────────────────────────────
@@ -604,7 +808,7 @@ footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:40px;back
 // ─────────────────────────────────────────────────────────────
 const HEADER = `
 <header class="nav"><div class="wrap nav-in">
-  <a href="/" class="logo"><span class="dot"></span>스터디<b>온라이브</b></a>
+  <a href="/" class="logo"><span class="live-mark">LIVE</span>스터디<span class="on">ON</span>라이브</a>
   <button class="nav-cta" onclick="openForm()">무료 상담 신청</button>
 </div></header>`;
 
@@ -612,7 +816,7 @@ const FOOTER = `
 <footer><div class="wrap">
   <div class="foot-top">
     <div>
-      <a href="/" class="logo"><span class="dot"></span>스터디<b>온라이브</b></a>
+      <a href="/" class="logo"><span class="live-mark">LIVE</span>스터디<span class="on">ON</span>라이브</a>
       <p style="color:var(--muted);font-size:14px;margin-top:10px;max-width:300px">
         전국 어디서나 1:1 화상과외.<br>검증된 선생님과 실시간 온라인 수업으로 연결됩니다.</p>
     </div>
@@ -689,78 +893,177 @@ function fillForm(addr,subj){openForm({address:addr,subject:subj})}
 // 페이지: 메인
 // ─────────────────────────────────────────────────────────────
 function pageHome() {
-  const subjCards = SUBJECTS.map(
-    (s) =>
-      `<div class="subj" onclick="openForm({subject:'${s.name}'})">
-        <div class="ic">${s.icon}</div><div class="nm">${s.name}</div>
-        <div class="dc">화상과외</div></div>`
-  ).join("");
-
   // 시도 탭 + 대표 지역 일부
   const tabs = SIDO_LIST.map(
-    (s, i) => `<button class="rt${i === 0 ? " on" : ""}" data-sido="${s.slug}" onclick="showSido('${s.slug}',this)">${s.name}</button>`
+    (s, i) => `<button class="h-rt${i === 0 ? " on" : ""}" data-sido="${s.slug}" onclick="showSido('${s.slug}',this)">${s.name}</button>`
   ).join("");
-
-  // 시도별 지역 리스트 (각 시도 최대 18개)
   const lists = SIDO_LIST.map((sd) => {
     const items = regions
       .filter((r) => r.slug.startsWith(sd.slug + "-"))
       .slice(0, 18)
       .map((r) => `<a href="/${r.slug}">${shortName(r.name)}</a>`)
       .join("");
-    return `<div class="region-list rl" data-sido="${sd.slug}" ${sd.slug === "seoul" ? "" : 'style="display:none"'}>${items}</div>`;
+    return `<div class="h-rl rl" data-sido="${sd.slug}" ${sd.slug === "seoul" ? "" : 'style="display:none"'}>${items}</div>`;
   }).join("");
 
+  // 메인 히어로용 실사 이미지 (고정)
+  const heroImg = `https://images.unsplash.com/${IMG_IDS[0]}?w=900&q=80&auto=format&fit=crop`;
+
   const body = `
-  <section class="hero"><div class="grid-bg"></div><div class="wrap hero-in">
-    <span class="badge"><span class="live"></span>실시간 1:1 화상수업</span>
-    <h1>집에서 만나는<br><span class="g">최고의 1:1 화상과외</span></h1>
-    <p class="sub">${SITE.desc}</p>
-    <div class="hero-cta">
-      <button class="btn btn-p" onclick="openForm()">무료 상담 신청 →</button>
-      <a class="btn btn-o" href="#regions">지역별 과외 찾기</a>
+<div class="home">
+  <div class="h-bg"></div>
+  <div class="h-grid-top"></div>
+  <div class="h-grid-floor"></div>
+  <div class="h-scan"></div>
+
+  <!-- 히어로 -->
+  <section class="h-hero">
+    <div class="h-wrap">
+      <div>
+        <span class="h-badge">● LIVE · 실시간 1:1 화상수업</span>
+        <h1 class="h-h1">집에서 만나는<br><span class="g">최고의 1:1 화상과외</span></h1>
+        <p class="h-sub">전국 1:1 화상과외 매칭 플랫폼. 검증된 선생님과 실시간 온라인 수업으로 어디서든 공부하세요.</p>
+        <div class="h-ctas">
+          <button class="h-btn h-btn-p" onclick="openForm()">무료 상담 신청 →</button>
+          <a class="h-btn h-btn-o" href="#regions">지역별 과외 찾기</a>
+        </div>
+        <div class="h-stats">
+          <div class="s"><b>전국</b><span>전 지역 매칭</span></div>
+          <div class="s"><b>1:1</b><span>맞춤 화상수업</span></div>
+          <div class="s"><b>5과목</b><span>국·영·수·사·과</span></div>
+          <div class="s"><b>30분</b><span>무료 체험</span></div>
+        </div>
+      </div>
+      <div class="h-visual">
+        <div class="h-img"><img src="${heroImg}" alt="화상과외 환경"></div>
+        <div class="h-fc h-fc-live"><span class="ld"></span><b>LIVE</b><span>수업 진행 중</span></div>
+        <div class="h-fc h-fc-class">
+          <div class="top"><div class="av">박</div><div class="who"><b>박OO 선생님</b><span>수학 · 1:1 수업</span></div><span class="tmr">⏱ 24:18</span></div>
+          <div class="meta"><span>화상</span><span>판서</span><span>채팅</span></div>
+        </div>
+        <div class="h-fc h-fc-rate"><div><div class="score">4.9</div><div class="lbl">이용 만족도</div></div><div class="stars">⭐⭐⭐⭐⭐</div></div>
+        <div class="h-fc h-fc-stats"><div class="ic">+</div><div><b>12명</b><span>지금 수업 중</span></div></div>
+      </div>
     </div>
-    <div class="stats">
-      <div class="stat"><div class="n">전국</div><div class="l">모든 지역 매칭</div></div>
-      <div class="stat"><div class="n">1:1</div><div class="l">맞춤 화상수업</div></div>
-      <div class="stat"><div class="n">5과목</div><div class="l">국·영·수·사·과</div></div>
+  </section>
+
+  <!-- 과목 (인터랙티브) -->
+  <section class="h-section">
+    <div class="h-wrap2">
+      <div class="h-head"><div class="k">SUBJECTS</div><h2><span class="g">과목별</span> 화상과외</h2><p>리스트 클릭 시 상세 표시</p></div>
+      <div class="h-subj">
+        <div class="h-feat" id="hFeat">
+          <div id="hFc">
+            <div class="top"><span class="live">LIVE</span><span class="tag" id="hFtag">MOST POPULAR</span></div>
+            <h3 id="hFname">수학</h3>
+            <div class="sub" id="hFsub">개념·심화·기출 단계별 학습. 가장 많이 찾는 화상과외 과목입니다.</div>
+            <div class="meta">
+              <div>난이도<b id="hFlv">기초·심화</b></div>
+              <div>대상<b id="hFtg">초·중·고</b></div>
+              <div>방식<b>1:1 화상</b></div>
+            </div>
+          </div>
+          <a class="go" id="hFgo" onclick="openForm({subject:'수학'})">수학 화상과외 자세히 보기 →</a>
+          <div class="bg-text" id="hFbg">수학</div>
+        </div>
+        <div class="h-list">
+          <div class="h-item" data-key="korean"><span class="dot"></span><div class="nm">국어 <small>독해·문법·작문</small></div><span class="live">LIVE</span><span class="arr">→</span></div>
+          <div class="h-item" data-key="english"><span class="dot"></span><div class="nm">영어 <small>내신·수능·회화</small></div><span class="live">LIVE</span><span class="arr">→</span></div>
+          <div class="h-item act" data-key="math"><span class="dot"></span><div class="nm">수학 <small>개념·심화·기출</small></div><span class="live">LIVE</span><span class="arr">→</span></div>
+          <div class="h-item" data-key="social"><span class="dot"></span><div class="nm">사회 <small>한국사·통합</small></div><span class="live">LIVE</span><span class="arr">→</span></div>
+          <div class="h-item" data-key="science"><span class="dot"></span><div class="nm">과학 <small>물리·화학·생명</small></div><span class="live">LIVE</span><span class="arr">→</span></div>
+        </div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <section><div class="wrap">
-    <div class="sec-head"><div class="k">SUBJECTS</div><h2>과목별 화상과외</h2>
-      <p>원하는 과목을 선택하고 바로 상담받으세요</p></div>
-    <div class="subj-grid">${subjCards}</div>
-  </div></section>
-
-  <section style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap">
-    <div class="sec-head"><div class="k">WHY ONLIVE</div><h2>왜 화상과외인가</h2>
-      <p>오프라인보다 똑똑한 온라인 1:1 수업</p></div>
-    <div class="feat-grid">
-      <div class="feat"><div class="ic">🌍</div><h3>지역 제한 없음</h3>
-        <p>전국 어디서나 우리 동네 밖 검증된 선생님과 연결됩니다. 이동 시간 0분.</p></div>
-      <div class="feat"><div class="ic">🎥</div><h3>실시간 화상수업</h3>
-        <p>화면 공유와 디지털 판서로 대면 수업과 동일한 몰입도를 제공합니다.</p></div>
-      <div class="feat"><div class="ic">💸</div><h3>합리적인 비용</h3>
-        <p>교통비·이동 부담 없이 1:1 맞춤 수업을 더 합리적인 가격에 받으세요.</p></div>
+  <!-- WHY (사이버 네온 카드) -->
+  <section class="h-section">
+    <div class="h-wrap2">
+      <div class="h-head"><div class="k">WHY ONLIVE</div><h2>왜 <span class="g">화상과외</span>인가</h2><p>오프라인보다 똑똑한 온라인 1:1 수업</p></div>
+      <div class="h-why">
+        <div class="h-card">
+          <span class="cn tl"></span><span class="cn tr"></span><span class="cn bl"></span><span class="cn br"></span>
+          <div class="no"><b>01</b> / 03</div>
+          <div class="iconbox">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#00ffd0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px #00ffd0)">
+              <circle cx="16" cy="16" r="11"/><path d="M5 16h22M16 5c3 3.5 4.5 7 4.5 11s-1.5 7.5-4.5 11M16 5c-3 3.5-4.5 7-4.5 11s1.5 7.5 4.5 11"/>
+            </svg>
+          </div>
+          <h3>지역 제한 없음</h3>
+          <p>전국 어디서나 우리 동네 밖의 검증된 선생님과 연결됩니다. 이동 시간 0분으로 시간 효율이 극대화됩니다.</p>
+          <div class="data"><span class="ld"></span>STATUS: <b>NATIONWIDE</b></div>
+        </div>
+        <div class="h-card">
+          <span class="cn tl"></span><span class="cn tr"></span><span class="cn bl"></span><span class="cn br"></span>
+          <div class="no"><b>02</b> / 03</div>
+          <div class="iconbox">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#b347ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px #b347ff)">
+              <rect x="3" y="8" width="19" height="16" rx="2"/><path d="M22 13l7-4v14l-7-4z"/><circle cx="9" cy="14" r="2"/>
+            </svg>
+          </div>
+          <h3>실시간 화상수업</h3>
+          <p>화면 공유와 디지털 판서로 대면 수업과 동일한 몰입도를 제공합니다. 양방향 실시간 1:1 학습.</p>
+          <div class="data"><span class="ld"></span>LATENCY: <b>&lt; 80ms</b></div>
+        </div>
+        <div class="h-card">
+          <span class="cn tl"></span><span class="cn tr"></span><span class="cn bl"></span><span class="cn br"></span>
+          <div class="no"><b>03</b> / 03</div>
+          <div class="iconbox">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#ff2bd6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px #ff2bd6)">
+              <circle cx="16" cy="16" r="11"/><path d="M16 9v14M19.5 12c-1-1-2-1.5-3.5-1.5-2.5 0-4 1.3-4 3s2 2.5 4 3 4 1.3 4 3-1.5 3-4 3c-1.5 0-2.5-.5-3.5-1.5"/>
+            </svg>
+          </div>
+          <h3>합리적인 비용</h3>
+          <p>교통비·이동 부담 없이 1:1 맞춤 수업을 더 합리적인 가격에 받으세요. 비용 대비 효율이 다릅니다.</p>
+          <div class="data"><span class="ld"></span>SAVINGS: <b>UP TO 40%</b></div>
+        </div>
+      </div>
     </div>
-  </div></section>
+  </section>
 
-  <section id="regions"><div class="wrap">
-    <div class="sec-head"><div class="k">REGIONS</div><h2>지역별 화상과외</h2>
-      <p>우리 동네를 선택하면 맞춤 페이지로 이동합니다</p></div>
-    <div class="region-tabs">${tabs}</div>
-    ${lists}
-  </div></section>
+  <!-- 지역 -->
+  <section class="h-section" id="regions">
+    <div class="h-wrap2">
+      <div class="h-head"><div class="k">REGIONS</div><h2><span class="g">지역별</span> 화상과외</h2><p>우리 동네를 선택하면 맞춤 페이지로 이동합니다</p></div>
+      <div class="h-rtabs">${tabs}</div>
+      ${lists}
+    </div>
+  </section>
+</div>
 
-  <script>
-  function showSido(slug,btn){
-    document.querySelectorAll('.rt').forEach(function(b){b.classList.remove('on')});
-    btn.classList.add('on');
-    document.querySelectorAll('.rl').forEach(function(l){
-      l.style.display=(l.dataset.sido===slug)?'grid':'none';});
-  }
-  </script>`;
+<script>
+function showSido(slug,btn){
+  document.querySelectorAll('.h-rt').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');
+  document.querySelectorAll('.h-rl').forEach(function(l){l.style.display=(l.dataset.sido===slug)?'grid':'none';});
+}
+var SUBJ_DATA={
+  korean:{name:"국어",tag:"독해·문법·작문",sub:"독해력과 문법, 작문 실력을 단계적으로 끌어올리는 1:1 화상수업.",lv:"기초·심화",tg:"초·중·고"},
+  english:{name:"영어",tag:"내신·수능·회화",sub:"학교 내신부터 수능, 회화까지 학생 목표에 맞춘 영어 화상과외.",lv:"기초·심화",tg:"초·중·고"},
+  math:{name:"수학",tag:"MOST POPULAR",sub:"개념·심화·기출 단계별 학습. 가장 많이 찾는 화상과외 과목입니다.",lv:"기초·심화",tg:"초·중·고"},
+  social:{name:"사회",tag:"한국사·통합",sub:"한국사와 통합사회를 핵심 위주로 짧고 깊게 학습합니다.",lv:"개념·심화",tg:"중·고등"},
+  science:{name:"과학",tag:"물리·화학·생명",sub:"물리·화학·생명·지구과학 영역별 맞춤 화상수업.",lv:"개념·심화",tg:"중·고등"},
+};
+document.querySelectorAll('.h-item').forEach(function(it){
+  it.addEventListener('click',function(){
+    document.querySelectorAll('.h-item').forEach(function(i){i.classList.remove('act')});
+    it.classList.add('act');
+    var d=SUBJ_DATA[it.dataset.key];
+    var fc=document.getElementById('hFc');
+    fc.classList.remove('h-fade');void fc.offsetWidth;fc.classList.add('h-fade');
+    document.getElementById('hFname').textContent=d.name;
+    document.getElementById('hFtag').textContent=d.tag;
+    document.getElementById('hFsub').textContent=d.sub;
+    document.getElementById('hFlv').textContent=d.lv;
+    document.getElementById('hFtg').textContent=d.tg;
+    document.getElementById('hFgo').textContent=d.name+' 화상과외 자세히 보기 →';
+    document.getElementById('hFgo').onclick=function(){openForm({subject:d.name})};
+    document.getElementById('hFbg').textContent=d.name;
+  });
+});
+document.body.classList.add('dark-home');
+</script>`;
 
   return layout({
     title: `${SITE.name} - 전국 1:1 화상과외 매칭 플랫폼`,
