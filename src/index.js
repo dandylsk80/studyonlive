@@ -143,6 +143,11 @@ export default {
       return sitemap();
     }
 
+    // rss.xml
+    if (path === "/rss.xml") {
+      return rss();
+    }
+
     // 메인
     if (path === "/") {
       return html(pageHome());
@@ -215,6 +220,33 @@ function sitemap() {
     urls.map((u) => `  <url><loc>${u}</loc></url>`).join("\n") +
     `\n</urlset>`;
   return new Response(body, { headers: { "content-type": "application/xml" } });
+}
+
+function rss() {
+  const base = `https://${SITE.domain}`;
+  const now = new Date().toUTCString();
+  const xe = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  let items = "", count = 0;
+  for (const r of regions) {
+    for (const s of SUBJECTS) {
+      const u = `${base}/${r.slug}/${s.slug}`;
+      items +=
+        `  <item><title>${xe(r.name + " " + s.name + " 1:1 화상과외")}</title>` +
+        `<link>${u}</link><guid>${u}</guid>` +
+        `<description>${xe(r.name + " " + s.name + " 온라인 1:1 화상과외 매칭. 집에서 검증된 선생님과 실시간 수업, 무료 상담.")}</description>` +
+        `<pubDate>${now}</pubDate></item>\n`;
+      if (++count >= 1000) break;
+    }
+    if (count >= 1000) break;
+  }
+  const body =
+    `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n<channel>\n` +
+    `<title>${xe(SITE.name)}</title>\n<link>${base}</link>\n` +
+    `<description>${xe(SITE.desc)}</description>\n<language>ko</language>\n` +
+    `<lastBuildDate>${now}</lastBuildDate>\n` +
+    items +
+    `</channel>\n</rss>`;
+  return new Response(body, { headers: { "content-type": "application/rss+xml; charset=UTF-8" } });
 }
 
 // ─────────────────────────────────────────────────────────────
