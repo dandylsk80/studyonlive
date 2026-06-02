@@ -148,6 +148,13 @@ export default {
       return rss();
     }
 
+    // favicon
+    if (path === "/favicon.svg") {
+      return new Response(SVG_FAVICON, {
+        headers: { "content-type": "image/svg+xml", "cache-control": "public, max-age=604800" },
+      });
+    }
+
     // 메인
     if (path === "/") {
       return html(pageHome());
@@ -207,6 +214,8 @@ async function handleInquiry(request, env) {
 // ─────────────────────────────────────────────────────────────
 // sitemap
 // ─────────────────────────────────────────────────────────────
+const SVG_FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5b7f"/><stop offset="1" stop-color="#e11d48"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#bg)"/><path d="M25.5 19 L46 32 L25.5 45 Z" fill="#fff"/></svg>';
+
 function sitemap() {
   const urls = [`https://${SITE.domain}/`];
   for (const r of regions) {
@@ -267,6 +276,8 @@ function layout({ title, desc, canonical, body, image }) {
 <meta charset="UTF-8">
 <meta name="naver-site-verification" content="cc44e4b11087ddf273b1aa4f00c27b4da881754d" />
 <meta name="DaumWebMasterTool" content="b60bbf918a59e93331f9ec53dc2a39ea938384c1e4e51dd5dccf10ac7a040dc1:MeMBEDgiMukoYtb9XFlQLw==" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title>
 <meta name="description" content="${desc}">
@@ -1017,9 +1028,7 @@ const FOOTER = `
         전국 어디서나 1:1 화상과외.<br>검증된 선생님과 실시간 온라인 수업으로 연결됩니다.</p>
     </div>
     <div class="foot-links">
-      <a href="/seoul-gangnamgu-yeoksamdong">서울 화상과외</a>
-      <a href="/gyeonggi-suwonsi-yeongtonggu-yeongtong1dong">경기 화상과외</a>
-      <a href="#" onclick="openForm();return false">상담 문의</a>
+      <a href="/">전국 화상과외</a>
     </div>
   </div>
   <div class="foot-bot">
@@ -1379,7 +1388,7 @@ function pageRegion(r) {
 
   const body = `
   <section class="rhero"><div class="wrap rhero-in">
-    <div class="crumb"><a href="/">홈</a> › ${r.name}</div>
+    <div class="crumb"><a href="/">전국화상과외</a> › ${r.name}</div>
     <h1>${sn} <span class="g">화상과외</span></h1>
     <p>${r.name} 학생을 위한 1:1 온라인 화상과외. 집에서 검증된 선생님과 실시간 수업을 시작하세요. 원하는 과목을 선택해 무료 상담을 받아보세요.</p>
     <div class="hero-cta" style="justify-content:flex-start">
@@ -1438,7 +1447,7 @@ function pageRegionSubject(r, s) {
 
   const body = `
   <section class="rhero"><div class="wrap rhero-in">
-    <div class="crumb"><a href="/">홈</a> › <a href="/${r.slug}">${sn}</a> › ${s.name} 화상과외</div>
+    <div class="crumb"><a href="/">전국화상과외</a> › <a href="/${r.slug}">${sn}</a> › ${s.name} 화상과외</div>
     <h1>${sn} ${s.name} <span class="g">화상과외</span></h1>
     <p>${r.name} 학생을 위한 1:1 ${s.name} 온라인 화상과외. 검증된 ${s.name} 선생님과 집에서 실시간으로 수업하세요.</p>
     <div class="datemeta">
