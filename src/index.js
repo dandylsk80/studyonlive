@@ -233,6 +233,7 @@ function layout({ title, desc, canonical, body, image }) {
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="naver-site-verification" content="cc44e4b11087ddf273b1aa4f00c27b4da881754d" />
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title>
 <meta name="description" content="${desc}">
