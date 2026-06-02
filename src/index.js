@@ -1045,13 +1045,17 @@ function pageHome() {
   // 시도별 동 데이터 (JS로 전달, 각 시도 최대 40개)
   const regionsBySido = {};
   for (const sd of SIDO_LIST) {
-    regionsBySido[sd.slug] = {
-      name: sd.name,
-      dongs: regions
-        .filter((r) => r.slug.startsWith(sd.slug + "-"))
-        .slice(0, 40)
-        .map((r) => ({ slug: r.slug, dong: r.dong })),
-    };
+    const list = regions.filter((r) => r.slug.startsWith(sd.slug + "-"));
+    const guMap = {}, guOrder = [];
+    for (const r of list) {
+      const parts = r.name.trim().split(/\s+/);
+      let gu = parts.slice(1, -1).join(" "), guSlug;
+      if (!gu) { gu = "전체"; guSlug = sd.slug; }
+      else { guSlug = r.slug.slice(0, r.slug.lastIndexOf("-")); }
+      if (!guMap[guSlug]) { guMap[guSlug] = { g: gu, s: guSlug, c: [] }; guOrder.push(guSlug); }
+      guMap[guSlug].c.push({ d: r.dong, s: r.slug });
+    }
+    regionsBySido[sd.slug] = { name: sd.name, gus: guOrder.map((k) => guMap[k]) };
   }
   const regionsJson = JSON.stringify(regionsBySido);
 
@@ -1174,7 +1178,7 @@ function pageHome() {
   <!-- 지역 (레이더 지도) -->
   <section class="h-section" id="regions">
     <div class="h-wrap2">
-      <div class="h-head"><div class="k">REGION SCANNER</div><h2><span class="g">지역별</span> 화상과외</h2><p>지도에서 지역을 선택하면 동 목록이 표시됩니다</p></div>
+      <div class="h-head"><div class="k">REGION SCANNER</div><h2><span class="g">지역별</span> 화상과외</h2><p>지도에서 지역을 클릭하면 시군구 목록이 표시됩니다</p></div>
       <div class="h-radar">
         <div class="rmap-box">
           <div class="rmap">${radarSvg}</div>
@@ -1182,7 +1186,7 @@ function pageHome() {
         </div>
         <div class="rpanel">
           <div class="rsearch"><span class="si">⌕</span><input type="text" id="rSearch" placeholder="동 이름 검색 (예: 역삼동)"></div>
-          <div class="rph"><span class="live"></span>SELECTED: <b id="rSelName">서울</b> · <span id="rSelCnt">0</span> regions</div>
+          <div class="rph"><span class="live"></span>SELECTED: <b id="rSelName">서울</b> · <span id="rSelCnt">0</span> <span id="rSelUnit">시군구</span></div>
           <div class="rdongs" id="rDongs"></div>
         </div>
       </div>
@@ -1192,16 +1196,27 @@ function pageHome() {
 
 <script>
 var REGIONS_BY_SIDO=${regionsJson};
-function renderDongs(sido){
-  var data=REGIONS_BY_SIDO[sido];
-  if(!data)return;
-  document.getElementById('rSelName').textContent=data.name;
-  document.getElementById('rSelCnt').textContent=data.dongs.length;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+var curSido='seoul',curView='gu';
+function setHead(name,cnt,unit){document.getElementById('rSelName').textContent=name;document.getElementById('rSelCnt').textContent=cnt;var u=document.getElementById('rSelUnit');if(u)u.textContent=unit;}
+function renderGus(sido){
+  var data=REGIONS_BY_SIDO[sido];if(!data)return;
+  curSido=sido;curView='gu';
+  setHead(data.name,data.gus.length,'시군구');
   var html='';
-  for(var i=0;i<data.dongs.length;i++){
-    var d=data.dongs[i];
-    html+='<a href="/'+d.slug+'"><span class="dn">'+d.dong+'</span><span class="ar">→</span></a>';
-  }
+  for(var i=0;i<data.gus.length;i++){var g=data.gus[i];
+    html+='<a class="gu" data-gu="'+g.s+'"><span class="dn">'+esc(g.g)+'</span><span class="ar">›</span></a>';}
+  document.getElementById('rDongs').innerHTML=html;
+}
+function renderDongsOf(sido,guSlug){
+  var data=REGIONS_BY_SIDO[sido];if(!data)return;
+  var gu=null;for(var i=0;i<data.gus.length;i++){if(data.gus[i].s===guSlug){gu=data.gus[i];break;}}
+  if(!gu)return;
+  curView='dong';
+  setHead(data.name+' › '+gu.g,gu.c.length,'동');
+  var html='<a class="back" data-back="1"><span class="dn">← 시군구 목록</span><span class="ar"></span></a>';
+  for(var j=0;j<gu.c.length;j++){var d=gu.c[j];
+    html+='<a href="/'+d.s+'"><span class="dn">'+esc(d.d)+'</span><span class="ar">→</span></a>';}
   document.getElementById('rDongs').innerHTML=html;
 }
 function frontSido(sido){
@@ -1215,7 +1230,7 @@ function highlight(sido){
   frontSido(sido);
 }
 var lockedSido='seoul';
-function selectSido(sido){lockedSido=sido;highlight(sido);renderDongs(sido);}
+function selectSido(sido){lockedSido=sido;highlight(sido);renderGus(sido);}
 document.querySelectorAll('.kr-prov, .prov-node, .jlabel').forEach(function(el){
   var s=el.dataset.sido;
   el.addEventListener('mouseenter',function(){highlight(s);});
@@ -1224,25 +1239,26 @@ document.querySelectorAll('.kr-prov, .prov-node, .jlabel').forEach(function(el){
 });
 var rmapEl=document.querySelector('.rmap');
 if(rmapEl)rmapEl.addEventListener('mouseleave',function(){highlight(lockedSido);});
-// 검색
+document.getElementById('rDongs').addEventListener('click',function(e){
+  var gu=e.target.closest('.gu');
+  if(gu){e.preventDefault();renderDongsOf(curSido,gu.dataset.gu);return;}
+  var bk=e.target.closest('.back');
+  if(bk){e.preventDefault();renderGus(curSido);return;}
+});
 document.getElementById('rSearch').addEventListener('input',function(e){
   var q=e.target.value.trim();
-  if(!q){renderDongs(lockedSido);return;}
+  if(!q){renderGus(curSido);return;}
   var results=[];
-  for(var sido in REGIONS_BY_SIDO){
-    var data=REGIONS_BY_SIDO[sido];
-    for(var i=0;i<data.dongs.length;i++){
-      if(data.dongs[i].dong.indexOf(q)>=0)results.push(data.dongs[i]);
-    }
-  }
+  for(var sido in REGIONS_BY_SIDO){var gus=REGIONS_BY_SIDO[sido].gus;
+    for(var i=0;i<gus.length;i++){var c=gus[i].c;
+      for(var j=0;j<c.length;j++){if(c[j].d.indexOf(q)>=0)results.push(c[j]);}}}
   var html='';
-  for(var j=0;j<Math.min(results.length,40);j++){
-    html+='<a href="/'+results[j].slug+'"><span class="dn">'+results[j].dong+'</span><span class="ar">→</span></a>';
-  }
+  for(var k=0;k<Math.min(results.length,60);k++){
+    html+='<a href="/'+results[k].s+'"><span class="dn">'+esc(results[k].d)+'</span><span class="ar">→</span></a>';}
   document.getElementById('rDongs').innerHTML=html||'<div style="color:#8390ab;font-size:13px;padding:10px">검색 결과 없음</div>';
 });
 highlight('seoul');
-renderDongs('seoul');
+renderGus('seoul');
 
 var SUBJ_DATA={
   korean:{name:"국어",tag:"독해·문법·작문",sub:"독해력과 문법, 작문 실력을 단계적으로 끌어올리는 1:1 화상수업.",lv:"기초·심화",tg:"초·중·고"},
