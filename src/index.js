@@ -266,6 +266,7 @@ function layout({ title, desc, canonical, body, image }) {
 <head>
 <meta charset="UTF-8">
 <meta name="naver-site-verification" content="cc44e4b11087ddf273b1aa4f00c27b4da881754d" />
+<meta name="DaumWebMasterTool" content="b60bbf918a59e93331f9ec53dc2a39ea938384c1e4e51dd5dccf10ac7a040dc1:MeMBEDgiMukoYtb9XFlQLw==" />
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title>
 <meta name="description" content="${desc}">
