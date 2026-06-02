@@ -435,6 +435,12 @@ footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:40px;back
 .foot-bot{margin-top:28px;padding-top:22px;border-top:1px solid var(--line);
   font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .notice{font-size:12.5px;color:#9aa3b5;margin-top:14px}
+.field label.req::after{content:" *";color:#e63946;font-weight:700}
+.addr-row{display:flex;gap:8px}
+.addr-row input{flex:1}
+.addr-row input[readonly]{cursor:pointer;background:#f7f8fc}
+.addr-srch{flex:none;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--ink);color:#fff;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
+.addr-srch:hover{opacity:.9}
 
 /* 플로팅 CTA */
 .fab{position:fixed;right:22px;bottom:22px;z-index:60;
@@ -991,14 +997,15 @@ const FOOTER = `
 
 const FORM_MODAL = `
 <button class="fab" onclick="openForm()">💬 무료 상담</button>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <div class="modal" id="formModal" onclick="if(event.target===this)closeForm()">
   <div class="modal-card" id="modalCard">
     <button class="modal-x" onclick="closeForm()">×</button>
     <div id="formBody">
       <h3>무료 상담 신청</h3>
       <p class="ms">정보를 남겨주시면 빠르게 연락드립니다.</p>
-      <div class="field"><label>학생 이름</label><input id="f_student" placeholder="홍길동"></div>
-      <div class="field"><label>학년</label>
+      <div class="field"><label class="req">학생 이름</label><input id="f_student" placeholder="홍길동"></div>
+      <div class="field"><label class="req">학년</label>
         <select id="f_grade">
           <option value="">선택</option>
           <optgroup label="초등"><option>초1</option><option>초2</option><option>초3</option><option>초4</option><option>초5</option><option>초6</option></optgroup>
@@ -1006,9 +1013,11 @@ const FORM_MODAL = `
           <optgroup label="고등"><option>고1</option><option>고2</option><option>고3</option></optgroup>
           <option>기타</option>
         </select></div>
-      <div class="field"><label>학부모 연락처</label><input id="f_phone" placeholder="010-0000-0000"></div>
-      <div class="field"><label>주소 (지역)</label><input id="f_address" placeholder="예: 경기도 광명시"></div>
-      <div class="field"><label>희망 과목</label>
+      <div class="field"><label class="req">학부모 연락처</label><input id="f_phone" placeholder="010-0000-0000"></div>
+      <div class="field"><label class="req">주소 (도로명)</label>
+        <div class="addr-row"><input id="f_address" placeholder="주소 검색을 눌러주세요" readonly onclick="searchAddr()"><button type="button" class="addr-srch" onclick="searchAddr()">주소 검색</button></div>
+        <input id="f_address_detail" placeholder="상세주소 (동/호수 등 · 선택)" style="margin-top:8px"></div>
+      <div class="field"><label class="req">희망 과목</label>
         <select id="f_subject"><option value="">선택</option>
           <option>국어</option><option>영어</option><option>수학</option><option>사회</option><option>과학</option></select></div>
       <div class="field"><label>문의 내용</label><textarea id="f_message" placeholder="궁금한 점을 자유롭게 적어주세요."></textarea></div>
@@ -1020,18 +1029,22 @@ const FORM_MODAL = `
 const JS = `
 function openForm(pre){
   document.getElementById('formModal').classList.add('open');
-  if(pre){if(pre.address)document.getElementById('f_address').value=pre.address;
-    if(pre.subject)document.getElementById('f_subject').value=pre.subject;}
+  if(pre){if(pre.subject)document.getElementById('f_subject').value=pre.subject;}
 }
 function closeForm(){document.getElementById('formModal').classList.remove('open')}
 async function submitForm(){
   var btn=document.getElementById('submitBtn');
+  var detail=val('f_address_detail');
   var d={
     student:val('f_student'),grade:val('f_grade'),phone:val('f_phone'),
-    address:val('f_address'),subject:val('f_subject'),message:val('f_message'),
+    address:val('f_address')+(detail?' '+detail:''),subject:val('f_subject'),message:val('f_message'),
     page:location.pathname
   };
-  if(!d.student||!d.phone){alert('학생 이름과 연락처는 필수입니다.');return;}
+  if(!d.student){alert('학생 이름을 입력해주세요.');return;}
+  if(!d.grade){alert('학년을 선택해주세요.');return;}
+  if(!d.phone){alert('연락처를 입력해주세요.');return;}
+  if(!val('f_address')){alert('주소 검색으로 주소를 입력해주세요.');return;}
+  if(!d.subject){alert('희망 과목을 선택해주세요.');return;}
   btn.textContent='전송 중...';btn.disabled=true;
   try{
     await fetch('/api/inquiry',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)});
@@ -1042,6 +1055,13 @@ async function submitForm(){
   }catch(e){btn.textContent='상담 신청하기';btn.disabled=false;alert('전송에 실패했습니다. 다시 시도해주세요.');}
 }
 function val(id){return document.getElementById(id).value.trim()}
+function searchAddr(){
+  if(!(window.daum&&daum.Postcode)){alert('주소 검색을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');return;}
+  new daum.Postcode({oncomplete:function(data){
+    document.getElementById('f_address').value=data.roadAddress||data.jibunAddress;
+    var det=document.getElementById('f_address_detail');if(det)det.focus();
+  }}).open();
+}
 function fillForm(addr,subj){openForm({address:addr,subject:subj})}
 `;
 
