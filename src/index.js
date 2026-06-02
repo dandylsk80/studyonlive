@@ -133,7 +133,7 @@ export default {
     // robots.txt
     if (path === "/robots.txt") {
       return new Response(
-        `User-agent: *\nAllow: /\nSitemap: https://${SITE.domain}/sitemap.xml\n`,
+        `User-agent: *\nAllow: /\nSitemap: https://${SITE.domain}/sitemap.xml\n#DaumWebMasterTool:b60bbf918a59e93331f9ec53dc2a39ea938384c1e4e51dd5dccf10ac7a040dc1:MeMBEDgiMukoYtb9XFlQLw==\n`,
         { headers: { "content-type": "text/plain" } }
       );
     }
