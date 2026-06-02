@@ -897,10 +897,19 @@ footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:40px;back
 .home .h-rlist a:hover{color:var(--hacc);border-color:var(--hacc);background:rgba(0,255,208,.08)}
 
 /* 메인일 때 헤더 다크 처리 */
-body.dark-home header.nav{background:rgba(5,8,24,.7);border-bottom-color:var(--hline);backdrop-filter:blur(14px)}
+body.dark-home{background:#050818}
+body.dark-home header.nav{background:rgba(7,11,28,.92);border-bottom:1px solid rgba(0,255,208,.16);box-shadow:0 1px 24px rgba(0,0,0,.45);backdrop-filter:blur(14px)}
 body.dark-home header.nav .logo{color:#fff}
 body.dark-home header.nav .logo .on{color:#ff5577}
-body.dark-home header.nav .nav-cta{background:#fff;color:#0b1020}
+body.dark-home header.nav .nav-cta{background:linear-gradient(135deg,#00ffd0,#00b8d4);color:#04121a;box-shadow:0 0 18px rgba(0,255,208,.35)}
+/* 다크 홈 푸터 */
+body.dark-home footer{background:#070b1c;border-top:1px solid rgba(0,255,208,.15)}
+body.dark-home footer .logo{color:#fff}
+body.dark-home footer .foot-top p{color:#8390ab!important}
+body.dark-home footer .foot-links a{color:#8390ab}
+body.dark-home footer .foot-links a:hover{color:#00ffd0}
+body.dark-home footer .foot-bot{color:#8390ab;border-top-color:rgba(120,180,255,.12)}
+body.dark-home footer .notice{color:#6b7693}
 
 /* 레이더 지도 (지역 섹션) */
 .home .h-radar{display:grid;grid-template-columns:440px 1fr;gap:20px;background:rgba(7,11,28,.6);
