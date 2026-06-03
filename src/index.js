@@ -1554,8 +1554,13 @@ async function submitForm(){
     document.getElementById('formBody').innerHTML=
       '<div class="msg-ok"><div class="big">✅</div><h3>신청이 완료되었습니다</h3>'+
       '<p class="ms">빠른 시일 내에 연락드리겠습니다. 감사합니다.</p>'+
-      '<button class="btn btn-o" style="width:100%;justify-content:center" onclick="closeForm()">닫기</button></div>';
+      '<button class="btn btn-o" style="width:100%;justify-content:center" onclick="resetAndClose()">닫기</button></div>';
   }catch(e){btn.textContent='상담 신청하기';btn.disabled=false;alert('전송에 실패했습니다. 다시 시도해주세요.');}
+}
+function resetAndClose(){
+  var fb=document.getElementById('formBody');
+  if(_formHTML!==null)fb.innerHTML=_formHTML;
+  document.getElementById('formModal').classList.remove('open');
 }
 function val(id){return document.getElementById(id).value.trim()}
 function searchAddr(){
