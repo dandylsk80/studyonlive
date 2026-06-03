@@ -1526,7 +1526,11 @@ const FORM_MODAL = `
 </div>`;
 
 const JS = `
+var _formHTML=null;
 function openForm(pre){
+  var fb=document.getElementById('formBody');
+  if(_formHTML===null)_formHTML=fb.innerHTML;
+  else fb.innerHTML=_formHTML;
   document.getElementById('formModal').classList.add('open');
   if(pre){if(pre.subject)document.getElementById('f_subject').value=pre.subject;}
 }
