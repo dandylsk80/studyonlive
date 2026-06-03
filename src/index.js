@@ -1401,8 +1401,8 @@ body.dark-home footer .foot-bot{color:#8390ab;border-top-color:rgba(120,180,255,
 body.dark-home footer .notice{color:#6b7693}
 
 /* 레이더 지도 (지역 섹션) */
-.home .h-radar{display:grid;grid-template-columns:440px 1fr;gap:20px;background:rgba(7,11,28,.6);
-  border:1px solid var(--hline);border-radius:22px;padding:24px;box-shadow:0 0 50px rgba(0,255,208,.08)}
+.home .h-radar{display:grid;grid-template-columns:440px 1fr;gap:20px;background:linear-gradient(180deg,rgba(12,18,42,.7),rgba(7,11,28,.6));
+  border:1px solid var(--hline);border-radius:22px;padding:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 24px 60px -20px rgba(0,0,0,.8),0 0 50px rgba(0,255,208,.1)}
 @media(max-width:860px){.home .h-radar{grid-template-columns:1fr}}
 @media(max-width:600px){
   .home .h-hero{padding:52px 18px;min-height:auto}
@@ -1425,9 +1425,9 @@ body.dark-home footer .notice{color:#6b7693}
 .home .rmap-box{display:flex;flex-direction:column;gap:14px}
 .home .rmap{position:relative;width:100%;border-radius:16px;overflow:hidden;
   background:radial-gradient(circle at 50% 45%,rgba(0,255,208,.05),transparent 70%);
-  border:1px solid rgba(0,255,208,.15);aspect-ratio:891/813}
+  border:1px solid rgba(0,255,208,.15);aspect-ratio:891/813;box-shadow:inset 0 0 40px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.04)}
 .home .rmap>svg{position:absolute;inset:0;width:100%;height:100%}
-.home .kr-prov{fill:rgba(60,110,200,.10);stroke:#00ffd0;stroke-width:.8;stroke-linejoin:round;cursor:pointer;transform-box:fill-box;transform-origin:center;transition:transform .18s ease,fill .18s,filter .18s}
+.home .kr-prov{fill:rgba(60,110,200,.12);stroke:#00ffd0;stroke-width:.8;stroke-linejoin:round;cursor:pointer;transform-box:fill-box;transform-origin:center;transition:transform .18s ease,fill .18s,filter .18s;filter:drop-shadow(0 3px 4px rgba(0,0,0,.55))}
 .home .kr-prov.on{fill:rgba(0,255,208,.32);stroke:#3df0e0;filter:drop-shadow(0 0 9px rgba(0,255,208,.95));transform:scale(1.13)}
 .home .rgrid line{stroke:rgba(0,255,208,.10);stroke-width:.5}
 .home .rring{fill:none;stroke:rgba(0,255,208,.12);stroke-width:.6}
@@ -1455,12 +1455,12 @@ body.dark-home footer .notice{color:#6b7693}
 .home .rph .live{width:7px;height:7px;border-radius:50%;background:var(--hneon);box-shadow:0 0 8px var(--hneon);animation:rnp 1.2s infinite}
 .home .rph b{color:#fff}
 .home .rdongs{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;max-height:440px;overflow-y:auto;padding-right:4px}
-.home .rdongs a{font-size:13px;padding:10px 12px;border-radius:10px;background:rgba(90,141,255,.05);border:1px solid var(--hline);
-  color:var(--hmuted);font-weight:600;text-decoration:none;transition:.15s;display:flex;align-items:center;justify-content:space-between;gap:5px;
-  white-space:nowrap;overflow:hidden}
+.home .rdongs a{font-size:13px;padding:11px 12px;border-radius:11px;background:linear-gradient(180deg,rgba(120,160,255,.24),rgba(40,70,160,.05));border:1px solid var(--hline);border-top-color:rgba(255,255,255,.18);
+  color:var(--hmuted);font-weight:600;text-decoration:none;transition:transform .15s,box-shadow .15s,background .15s,color .15s,border-color .15s;display:flex;align-items:center;justify-content:space-between;gap:5px;
+  white-space:nowrap;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -3px 6px rgba(0,0,0,.45),0 7px 16px rgba(0,0,0,.55)}
 .home .rdongs a span.dn{overflow:hidden;text-overflow:ellipsis}
 .home .rdongs a .ar{color:var(--hacc);opacity:0;transition:.15s;flex:0 0 auto}
-.home .rdongs a:hover{color:#fff;border-color:var(--hacc);background:rgba(0,255,208,.08)}
+.home .rdongs a:hover{color:#fff;border-color:var(--hacc);background:linear-gradient(180deg,rgba(0,255,208,.24),rgba(0,150,130,.06));transform:translateY(-3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.4),0 12px 24px rgba(0,255,208,.28)}
 .home .rdongs a:hover .ar{opacity:1}
 .home .rdongs::-webkit-scrollbar{width:6px}
 .home .rdongs::-webkit-scrollbar-thumb{background:rgba(0,255,208,.2);border-radius:3px}
@@ -1471,7 +1471,7 @@ body.dark-home footer .notice{color:#6b7693}
 // ─────────────────────────────────────────────────────────────
 const HEADER = `
 <header class="nav"><div class="wrap nav-in">
-  <a href="/" class="logo"><span class="live-mark">LIVE</span>스터디<span class="on">ON</span>라이브</a>
+  <a href="/" class="logo"><span class="live-mark">LIVE</span><span class="wm">스터디<span class="on">ON</span>라이브</span></a>
   <button class="nav-cta" onclick="openForm()">무료 상담 신청</button>
 </div></header>`;
 
@@ -1479,7 +1479,7 @@ const FOOTER = `
 <footer><div class="wrap">
   <div class="foot-top">
     <div>
-      <a href="/" class="logo"><span class="live-mark">LIVE</span>스터디<span class="on">ON</span>라이브</a>
+      <a href="/" class="logo"><span class="live-mark">LIVE</span><span class="wm">스터디<span class="on">ON</span>라이브</span></a>
       <p style="color:var(--muted);font-size:14px;margin-top:10px;max-width:300px">
         전국 어디서나 1:1 화상과외.<br>검증된 선생님과 실시간 온라인 수업으로 연결됩니다.</p>
     </div>
