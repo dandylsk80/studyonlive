@@ -1304,7 +1304,7 @@ footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:40px;back
   box-shadow:0 0 40px rgba(0,255,208,.1)}
 .home .h-feat:hover{transform:translateY(-4px);box-shadow:0 0 60px rgba(0,255,208,.2)}
 .home .h-feat .bg-text{position:absolute;right:-40px;bottom:-70px;font-size:280px;font-weight:900;
-  color:rgba(255,255,255,.04);line-height:1;transition:.4s}
+  color:rgba(255,255,255,.04);line-height:1;transition:.4s;pointer-events:none}
 .home .h-feat::after{content:"";position:absolute;inset:0;opacity:.08;pointer-events:none;
   background-image:linear-gradient(rgba(0,255,208,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,208,.5) 1px,transparent 1px);
   background-size:32px 32px}
