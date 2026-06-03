@@ -709,21 +709,21 @@ a{color:inherit;text-decoration:none}
 header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
   background:rgba(251,252,255,.82);border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;justify-content:space-between;height:128px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em;white-space:nowrap}
+.logo{display:flex;align-items:center;gap:0;font-weight:800;font-size:19px;letter-spacing:-.02em;white-space:nowrap}
 .logo .live-mark{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:900;
-  color:#fff;background:#e63946;padding:4px 9px;border-radius:6px;letter-spacing:.05em}
+  color:#fff;background:#e63946;padding:4px 9px;border-radius:999px;letter-spacing:.05em;margin-right:9px}
 .logo .live-mark::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;
   box-shadow:0 0 0 0 rgba(255,255,255,.6);animation:livepulse 1.6s infinite}
 @keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}100%{box-shadow:0 0 0 6px transparent}}
 .logo b{color:var(--brand)}
-.logo .on{color:#e63946;font-weight:900}
+.logo .on{color:#b00710;font-weight:900}
 .nav-cta{font-size:14px;font-weight:700;padding:9px 18px;border-radius:999px;
   background:var(--ink);color:#fff;transition:.2s}
 .nav-cta:hover{transform:translateY(-1px)}
 @media(max-width:600px){
   .nav-in{height:64px}
-  .logo{font-size:15px;gap:7px}
-  .logo .live-mark{font-size:9px;padding:3px 6px;gap:4px}
+  .logo{font-size:15px;gap:0}
+  .logo .live-mark{font-size:9px;padding:3px 6px;gap:4px;margin-right:7px}
   .nav-cta{font-size:12.5px;padding:8px 13px}
 }
 
