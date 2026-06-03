@@ -1427,7 +1427,7 @@ body.dark-home footer .notice{color:#6b7693}
   background:radial-gradient(circle at 50% 45%,rgba(0,255,208,.05),transparent 70%);
   border:1px solid rgba(0,255,208,.15);aspect-ratio:891/813;box-shadow:inset 0 0 40px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.04)}
 .home .rmap>svg{position:absolute;inset:0;width:100%;height:100%}
-.home .kr-prov{fill:rgba(60,110,200,.12);stroke:#00ffd0;stroke-width:.8;stroke-linejoin:round;cursor:pointer;transform-box:fill-box;transform-origin:center;transition:transform .18s ease,fill .18s,filter .18s;filter:drop-shadow(0 3px 4px rgba(0,0,0,.55))}
+.home .kr-prov{fill:rgba(55,105,205,.22);stroke:#00ffd0;stroke-width:.8;stroke-linejoin:round;cursor:pointer;transform-box:fill-box;transform-origin:center;transition:transform .18s ease,fill .18s,filter .18s;filter:drop-shadow(0 5px 6px rgba(0,0,0,.75)) drop-shadow(0 -1px 1px rgba(130,225,255,.3))}
 .home .kr-prov.on{fill:rgba(0,255,208,.32);stroke:#3df0e0;filter:drop-shadow(0 0 9px rgba(0,255,208,.95));transform:scale(1.13)}
 .home .rgrid line{stroke:rgba(0,255,208,.10);stroke-width:.5}
 .home .rring{fill:none;stroke:rgba(0,255,208,.12);stroke-width:.6}
