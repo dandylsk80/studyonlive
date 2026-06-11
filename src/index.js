@@ -597,7 +597,7 @@ function pageAllRegions() {
   });
 }
 
-const SVG_FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5b7f"/><stop offset="1" stop-color="#e11d48"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#bg)"/><path d="M25.5 19 L46 32 L25.5 45 Z" fill="#fff"/></svg>';
+const SVG_FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f6bff"/><stop offset="1" stop-color="#6a4bff"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#bg)"/><text x="32" y="34" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="800" fill="#fff">1:1</text><circle cx="50" cy="15" r="5" fill="#00ffd0"/></svg>';
 
 function sitemap() {
   const urls = [`https://${SITE.domain}/`, `https://${SITE.domain}/regions`];
