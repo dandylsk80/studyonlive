@@ -700,7 +700,7 @@ const CSS = `
 html{scroll-behavior:smooth;overflow-x:hidden}
 body{
   font-family:'Pretendard','Apple SD Gothic Neo',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
-  background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;word-break:keep-all;
 }
 img{max-width:100%}
 a{color:inherit;text-decoration:none}
@@ -819,7 +819,7 @@ section{padding:64px 0}
   box-shadow:0 18px 40px -16px var(--glow)}
 .subj .ic{font-size:34px}
 .subj .nm{font-weight:800;margin-top:10px;font-size:17px}
-.subj .dc{font-size:13px;color:var(--muted);margin-top:3px}
+.subj .dc{font-size:13px;color:var(--muted);margin-top:3px;word-break:keep-all}
 
 /* 지역 칩 */
 .region-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:26px}
@@ -837,7 +837,7 @@ section{padding:64px 0}
 @media(max-width:860px){.feat-grid{grid-template-columns:1fr}}
 .feat{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:30px}
 .feat .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
-  font-size:22px;background:linear-gradient(135deg,#eef3ff,#f2effe);margin-bottom:16px}
+  font-size:22px;background:linear-gradient(135deg,#eef3ff,#f2effe);margin-bottom:8px}
 .feat h3{font-size:19px;font-weight:800;letter-spacing:-.02em}
 .feat p{color:var(--muted);font-size:15px;margin-top:8px}
 
@@ -966,6 +966,12 @@ footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:40px;back
   color:#fff;background:rgba(47,107,255,.9);padding:6px 13px;border-radius:999px;margin-bottom:12px}
 .thumb .ov h2{color:#fff;font-size:clamp(24px,4.5vw,38px);font-weight:900;letter-spacing:-.03em;
   line-height:1.15;text-shadow:0 2px 14px rgba(0,0,0,.3)}
+@media(max-width:600px){
+  .thumb{aspect-ratio:4/3;margin-top:14px}
+  .thumb .ov{padding:22px;justify-content:flex-end}
+  .thumb .ov .kw{margin-bottom:10px}
+  .thumb .ov h2{font-size:28px}
+}
 
 /* 본문 아티클 */
 .article{background:var(--surface);border:1px solid var(--line);border-radius:20px;
