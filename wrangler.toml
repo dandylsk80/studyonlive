@@ -1,0 +1,7 @@
+name = "studyonlive"
+main = "studyonlive_worker.js"
+compatibility_date = "2026-05-25"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+GAS_URL = "https://script.google.com/macros/s/AKfycbxt2osrLkUGnCyc5flGzF6Z6nli6zfLxbdn0hFIkbGN_yEAj0264_7bAZ_QU7mM3878/exec"
