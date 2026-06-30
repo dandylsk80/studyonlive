@@ -998,6 +998,8 @@ function layout({ title, desc, canonical, body, image }) {
 <meta property="og:image" content="${ogImage}">
 <meta name="robots" content="index,follow">
 <style>${CSS}</style>
+<script type="text/javascript" src="//wcs.pstatic.net/wcslog.js"></script>
+<script type="text/javascript">if(!wcs_add) var wcs_add = {};wcs_add["wa"] = "198b085be019fe0";if(window.wcs){wcs_do();}</script>
 </head>
 <body>
 ${HEADER}
