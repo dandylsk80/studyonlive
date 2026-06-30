@@ -1044,8 +1044,8 @@ header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
 .nav-cta{font-size:14px;font-weight:700;padding:9px 18px;border-radius:999px;
   background:var(--ink);color:#fff;transition:.2s}
 .nav-cta:hover{transform:translateY(-1px)}
-.nav-tel{font-size:14px;font-weight:800;color:#16a34a;text-decoration:none;white-space:nowrap}
-.nav-tel:hover{text-decoration:underline}
+.nav-tel{font-size:13.5px;font-weight:800;color:#fff;background:linear-gradient(100deg,#16a34a,#22c55e);padding:9px 16px;border-radius:999px;text-decoration:none;white-space:nowrap;box-shadow:0 6px 16px -6px #16a34a}
+.nav-tel:hover{transform:translateY(-1px)}
 @media(max-width:600px){
   .nav-in{height:64px}
   .logo{font-size:15px;gap:0}
@@ -1258,7 +1258,7 @@ footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:40px;back
   font-weight:800;font-size:15px;padding:15px 24px;border-radius:999px;border:none;cursor:pointer;text-decoration:none;
   box-shadow:0 14px 34px -10px var(--brand);transition:.2s;display:flex;align-items:center;gap:8px;white-space:nowrap}
 .fab-tel{background:linear-gradient(100deg,#16a34a,#22c55e);box-shadow:0 14px 34px -10px #16a34a;color:#fff}
-.fab-sms{background:linear-gradient(100deg,#f59e0b,#fbbf24);box-shadow:0 14px 34px -10px #f59e0b;color:#fff}
+.fab-sms{background:linear-gradient(100deg,#d97706,#f59e0b);box-shadow:0 14px 34px -10px #b45309;color:#fff}
 .fab:hover{transform:translateY(-2px) scale(1.02)}
 @media(max-width:600px){.fabwrap{right:14px;bottom:14px;gap:9px}.fab{padding:13px 18px;font-size:14px}}
 
@@ -1823,8 +1823,8 @@ const FOOTER = `
   <div class="foot-top">
     <div>
       <a href="/" class="logo"><span class="live-mark">LIVE</span><span class="wm">스터디<span class="on">ON</span>라이브</span></a>
-      <p style="color:var(--muted);font-size:14px;margin-top:10px;max-width:300px">
-        전국 어디서나 1:1 화상과외.<br>검증된 선생님과 실시간 온라인 수업으로 연결됩니다.</p>
+      <p style="color:var(--muted);font-size:14px;margin-top:10px">
+        전국 어디서나 1:1 화상과외. 검증된 선생님과 실시간 온라인 수업으로 연결됩니다.<br>상담 문의 010-6834-8080</p>
     </div>
     <div class="foot-links">
       <a href="/regions">전국 화상과외</a>
