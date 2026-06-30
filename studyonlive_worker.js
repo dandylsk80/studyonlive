@@ -1286,7 +1286,7 @@ footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:40px;back
 .msg-ok h3{margin-top:10px}
 
 /* 썸네일 (지역+화상과외 오버레이) */
-.thumb{position:relative;width:100%;aspect-ratio:1200/520;border-radius:20px;overflow:hidden;
+.thumb{position:relative;width:100%;aspect-ratio:1200/580;border-radius:20px;overflow:hidden;
   margin-top:8px;background:#dfe6f3}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .thumb .ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;
@@ -1819,7 +1819,7 @@ const HEADER = `
 </div></header>`;
 
 const FOOTER = `
-<footer><div class="wrap">
+<footer><div class="wrap narrow">
   <div class="foot-top">
     <div>
       <a href="/" class="logo"><span class="live-mark">LIVE</span><span class="wm">스터디<span class="on">ON</span>라이브</span></a>
