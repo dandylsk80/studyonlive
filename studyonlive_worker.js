@@ -1027,6 +1027,7 @@ body{
 img{max-width:100%}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.wrap.narrow{max-width:880px}
 
 /* 헤더 */
 header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
@@ -1043,10 +1044,13 @@ header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
 .nav-cta{font-size:14px;font-weight:700;padding:9px 18px;border-radius:999px;
   background:var(--ink);color:#fff;transition:.2s}
 .nav-cta:hover{transform:translateY(-1px)}
+.nav-tel{font-size:14px;font-weight:800;color:#16a34a;text-decoration:none;white-space:nowrap}
+.nav-tel:hover{text-decoration:underline}
 @media(max-width:600px){
   .nav-in{height:64px}
   .logo{font-size:15px;gap:0}
   .logo .live-mark{font-size:9px;padding:3px 6px;gap:4px;margin-right:7px}
+  .nav-tel{display:none}
   .nav-cta{font-size:12.5px;padding:8px 13px}
 }
 
@@ -1249,11 +1253,14 @@ footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:40px;back
 @media(max-width:600px){.reg-wrap{padding:20px 16px 60px}.reg-hero h1{font-size:27px}.reg-sido summary{padding:15px 18px;font-size:16px}.reg-body{padding:4px 16px 16px}.reg-dongs{gap:7px 12px}.reg-dongs a{font-size:13.5px}}
 
 /* 플로팅 CTA */
-.fab{position:fixed;right:22px;bottom:22px;z-index:60;
-  background:linear-gradient(100deg,var(--brand),var(--brand2));color:#fff;
-  font-weight:800;font-size:15px;padding:15px 24px;border-radius:999px;border:none;cursor:pointer;
-  box-shadow:0 14px 34px -10px var(--brand);transition:.2s;display:flex;align-items:center;gap:8px}
+.fabwrap{position:fixed;right:22px;bottom:22px;z-index:60;display:flex;flex-direction:column;gap:11px;align-items:flex-end}
+.fab{background:linear-gradient(100deg,var(--brand),var(--brand2));color:#fff;
+  font-weight:800;font-size:15px;padding:15px 24px;border-radius:999px;border:none;cursor:pointer;text-decoration:none;
+  box-shadow:0 14px 34px -10px var(--brand);transition:.2s;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.fab-tel{background:linear-gradient(100deg,#16a34a,#22c55e);box-shadow:0 14px 34px -10px #16a34a;color:#fff}
+.fab-sms{background:linear-gradient(100deg,#f59e0b,#fbbf24);box-shadow:0 14px 34px -10px #f59e0b;color:#fff}
 .fab:hover{transform:translateY(-2px) scale(1.02)}
+@media(max-width:600px){.fabwrap{right:14px;bottom:14px;gap:9px}.fab{padding:13px 18px;font-size:14px}}
 
 /* 모달 */
 .modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
@@ -1801,7 +1808,7 @@ body.dark-home footer .notice{color:#6b7693}
 const HEADER = `
 <header class="nav"><div class="wrap nav-in">
   <a href="/" class="logo"><span class="live-mark">LIVE</span><span class="wm">스터디<span class="on">ON</span>라이브</span></a>
-  <button class="nav-cta" onclick="openForm()">무료 상담 신청</button>
+  <div style="display:flex;align-items:center;gap:8px"><a class="nav-tel" href="tel:010-6834-8080">📞 010-6834-8080</a><button class="nav-cta" onclick="openForm()">무료 상담 신청</button></div>
 </div></header>`;
 
 const FOOTER = `
@@ -1824,7 +1831,7 @@ const FOOTER = `
 </div></footer>`;
 
 const FORM_MODAL = `
-<button class="fab" onclick="openForm()">💬 무료 상담</button>
+<div class="fabwrap"><a class="fab fab-tel" href="tel:010-6834-8080">📞 전화상담</a><a class="fab fab-sms" href="sms:010-6834-8080">✉️ 문자상담</a><button class="fab" onclick="openForm()">💬 무료 상담</button></div>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <div class="modal" id="formModal" onclick="if(event.target===this)closeForm()">
   <div class="modal-card" id="modalCard">
@@ -2181,7 +2188,7 @@ function pageRegion(r) {
   ).join("");
 
   const body = `
-  <section class="rhero"><div class="wrap rhero-in">
+  <section class="rhero"><div class="wrap narrow rhero-in">
     <div class="crumb"><a href="/">전국화상과외</a> › ${r.name}</div>
     <h1>${sn} <span class="g">화상과외</span></h1>
     <p>${r.name} 학생을 위한 1:1 온라인 화상과외. 집에서 검증된 선생님과 실시간 수업을 시작하세요. 원하는 과목을 선택해 무료 상담을 받아보세요.</p>
@@ -2190,12 +2197,12 @@ function pageRegion(r) {
     </div>
   </div></section>
 
-  <section style="padding-top:20px"><div class="wrap">
+  <section style="padding-top:20px"><div class="wrap narrow">
     <div class="sec-head"><div class="k">SUBJECTS</div><h2>${sn} 과목별 화상과외</h2></div>
     <div class="subj-grid">${subjCards}</div>
   </div></section>
 
-  <section><div class="wrap">
+  <section><div class="wrap narrow">
     <div class="cbox">
       <h2>${sn} 화상과외, 이래서 좋습니다</h2>
       <p>${r.name} 지역 학생이라면 이제 학원이나 방문 과외를 찾아 멀리 나갈 필요가 없습니다. 화상과외는 집에서 1:1로 진행되어 이동 시간이 들지 않고, 거주 지역에 관계없이 전국의 우수한 선생님과 매칭될 수 있습니다.</p>
@@ -2240,7 +2247,7 @@ function pageRegionSubject(r, s) {
   const thumbUrl = imgFor(r.slug, s.slug);
 
   const body = `
-  <section class="rhero"><div class="wrap rhero-in">
+  <section class="rhero"><div class="wrap narrow rhero-in">
     <div class="crumb"><a href="/">전국화상과외</a> › <a href="/${r.slug}">${sn}</a> › ${s.name} 화상과외</div>
     <h1>${sn} ${s.name} <span class="g">화상과외</span></h1>
     <p>${r.name} 학생을 위한 1:1 ${s.name} 온라인 화상과외. 검증된 ${s.name} 선생님과 집에서 실시간으로 수업하세요.</p>
@@ -2253,7 +2260,7 @@ function pageRegionSubject(r, s) {
     </div>
   </div></section>
 
-  <section style="padding-top:16px"><div class="wrap">
+  <section style="padding-top:16px"><div class="wrap narrow">
     <div class="thumb">
       <img src="${thumbUrl}" alt="${sn} ${s.name} 화상과외" loading="lazy">
       <div class="ov"><span class="kw">${sn} 화상과외</span>
