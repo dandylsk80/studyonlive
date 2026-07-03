@@ -5,3 +5,8 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 GAS_URL = "https://script.google.com/macros/s/AKfycbxt2osrLkUGnCyc5flGzF6Z6nli6zfLxbdn0hFIkbGN_yEAj0264_7bAZ_QU7mM3878/exec"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "allcare_stats"
+database_id = "d53a86d3-c541-4a3d-9358-bca98b1f71b4"
