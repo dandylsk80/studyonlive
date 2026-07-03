@@ -447,6 +447,23 @@ export default {
     const path = url.pathname.replace(/\/+$/, "") || "/";
     const segs = path.split("/").filter(Boolean);
 
+    // === 전환 추적 수집 API (상담 코드와 무관, 독립 동작) ===
+    if (path === '/api/track' && request.method === 'POST') {
+      try {
+        const b = await request.json();
+        const ip = request.headers.get('CF-Connecting-IP') || '';
+        const ts = new Date().toISOString();
+        if (env && env.DB && (b.type === 'tel' || b.type === 'sms' || b.type === 'contact')) {
+          await env.DB.prepare('INSERT INTO events (site,type,page,ref,ip,ts) VALUES (?,?,?,?,?,?)')
+            .bind('studyonlive', b.type, (b.page||'').slice(0,300), (b.ref||'').slice(0,120), ip, ts).run();
+        }
+      } catch(e) {}
+      return new Response(JSON.stringify({ok:true}), { headers: { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' } });
+    }
+    if (path === '/api/track' && request.method === 'OPTIONS') {
+      return new Response(null, { headers: { 'Access-Control-Allow-Origin':'*', 'Access-Control-Allow-Methods':'POST,OPTIONS', 'Access-Control-Allow-Headers':'Content-Type' } });
+    }
+
     // 상담폼 제출
     if (request.method === "POST" && path === "/api/inquiry") {
       return handleInquiry(request, env);
@@ -1007,6 +1024,7 @@ ${body}
 ${FOOTER}
 ${FORM_MODAL}
 <script>${JS}</script>
+<script>(function(){function t(ty){try{fetch("/api/track",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:ty,page:location.pathname,ref:document.referrer})});}catch(e){}}document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a,button");if(!a)return;var h=(a.getAttribute&&a.getAttribute("href"))||"";if(h.indexOf("tel:")===0)t("tel");else if(h.indexOf("sms:")===0)t("sms");else if(a.id==="submitBtn")t("contact");},true);})();</script>
 </body>
 </html>`;
 }
