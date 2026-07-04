@@ -453,7 +453,7 @@ export default {
         const b = await request.json();
         const ip = request.headers.get('CF-Connecting-IP') || '';
         const ts = new Date().toISOString();
-        if (env && env.DB && (b.type === 'tel' || b.type === 'sms' || b.type === 'contact')) {
+        if (env && env.DB && (b.type === 'tel' || b.type === 'sms' || b.type === 'contact' || b.type === 'view')) {
           await env.DB.prepare('INSERT INTO events (site,type,page,ref,ip,ts) VALUES (?,?,?,?,?,?)')
             .bind('studyonlive', b.type, (b.page||'').slice(0,300), (b.ref||'').slice(0,120), ip, ts).run();
         }
@@ -1024,7 +1024,7 @@ ${body}
 ${FOOTER}
 ${FORM_MODAL}
 <script>${JS}</script>
-<script>(function(){function t(ty){try{fetch("/api/track",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:ty,page:location.pathname,ref:document.referrer})});}catch(e){}}document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a,button");if(!a)return;var h=(a.getAttribute&&a.getAttribute("href"))||"";if(h.indexOf("tel:")===0)t("tel");else if(h.indexOf("sms:")===0)t("sms");else if(a.id==="submitBtn")t("contact");},true);})();</script>
+<script>(function(){function t(ty){try{fetch("/api/track",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:ty,page:location.pathname,ref:document.referrer})});}catch(e){}}if(location.pathname.indexOf("/api/")!==0)t("view");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a,button");if(!a)return;var h=(a.getAttribute&&a.getAttribute("href"))||"";if(h.indexOf("tel:")===0)t("tel");else if(h.indexOf("sms:")===0)t("sms");else if(a.id==="submitBtn")t("contact");},true);})();</script>
 </body>
 </html>`;
 }
