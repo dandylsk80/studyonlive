@@ -452,8 +452,10 @@ export default {
       try {
         const b = await request.json();
         const ip = request.headers.get('CF-Connecting-IP') || '';
+        const ua = request.headers.get('User-Agent') || '';
+        const isBot = /bot|crawl|spider|slurp|mediapartners|googlebot|bingbot|yandex|baidu|duckduckbot|facebookexternalhit|semrush|ahrefs|mj12bot|dotbot|petalbot|bytespider|headlesschrome|python-requests|curl|wget/i.test(ua);
         const ts = new Date().toISOString();
-        if (env && env.DB && (b.type === 'tel' || b.type === 'sms' || b.type === 'contact' || b.type === 'view')) {
+        if (env && env.DB && !(b.type === 'view' && isBot) && (b.type === 'tel' || b.type === 'sms' || b.type === 'contact' || b.type === 'view')) {
           await env.DB.prepare('INSERT INTO events (site,type,page,ref,ip,ts) VALUES (?,?,?,?,?,?)')
             .bind('studyonlive', b.type, (b.page||'').slice(0,300), (b.ref||'').slice(0,120), ip, ts).run();
         }
