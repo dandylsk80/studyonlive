@@ -452,10 +452,8 @@ export default {
       try {
         const b = await request.json();
         const ip = request.headers.get('CF-Connecting-IP') || '';
-        const ua = request.headers.get('User-Agent') || '';
-        const isBot = /bot|crawl|spider|slurp|mediapartners|googlebot|bingbot|yandex|baidu|duckduckbot|facebookexternalhit|semrush|ahrefs|mj12bot|dotbot|petalbot|bytespider|headlesschrome|python-requests|curl|wget/i.test(ua);
         const ts = new Date().toISOString();
-        if (env && env.DB && !(b.type === 'view' && isBot) && (b.type === 'tel' || b.type === 'sms' || b.type === 'contact' || b.type === 'view')) {
+        if (env && env.DB && (b.type === 'tel' || b.type === 'sms' || b.type === 'contact' || b.type === 'view')) {
           await env.DB.prepare('INSERT INTO events (site,type,page,ref,ip,ts) VALUES (?,?,?,?,?,?)')
             .bind('studyonlive', b.type, (b.page||'').slice(0,300), (b.ref||'').slice(0,120), ip, ts).run();
         }
@@ -490,7 +488,7 @@ export default {
     }
 
     // favicon
-    if (path === "/favicon.svg") {
+    if (path === "/favicon.svg" || path === "/favicon.ico") {
       return new Response(SVG_FAVICON, {
         headers: { "content-type": "image/svg+xml", "cache-control": "public, max-age=604800" },
       });
@@ -1004,6 +1002,7 @@ function layout({ title, desc, canonical, body, image }) {
 <meta name="naver-site-verification" content="cc44e4b11087ddf273b1aa4f00c27b4da881754d" />
 <meta name="DaumWebMasterTool" content="b60bbf918a59e93331f9ec53dc2a39ea938384c1e4e51dd5dccf10ac7a040dc1:MeMBEDgiMukoYtb9XFlQLw==" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="shortcut icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/favicon.svg">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title>
