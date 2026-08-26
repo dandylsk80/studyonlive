@@ -445,7 +445,7 @@ const SIDO_LIST = [
 /* ─── 텔레그램 전환 알림 ───────────────────────────────────────── */
 const TG_TOKEN = '8101954996:AAGNV225WaNL8Zqh9OxtmP1WNzlbquNaq9s';
 const TG_CHAT  = '8649422714';
-const TG_LABEL = { tel: '전화 버튼 클릭', contact: '상담 버튼 클릭' };
+const TG_LABEL = { tel: '전화 버튼 클릭', sms: '문자 버튼 클릭', contact: '상담 버튼 클릭' };
 
 const TG_SITE   = '화상과외';
 const TG_DOMAIN = 'studyonlive.com';
@@ -1112,7 +1112,7 @@ ${body}
 ${FOOTER}
 ${FORM_MODAL}
 <script>${JS}</script>
-<script>(function(){function t(ty){try{fetch("/api/track",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:ty,page:location.pathname,ref:document.referrer})});}catch(e){}}if(location.pathname.indexOf("/api/")!==0)t("view");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a,button");if(!a)return;var h=(a.getAttribute&&a.getAttribute("href"))||"";if(h.indexOf("tel:")===0)t("tel");else if(h.indexOf("sms:")===0)t("sms");else if(a.id==="submitBtn")t("contact");},true);})();</script>
+<script>(function(){function t(ty){try{fetch("/api/track",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:ty,page:location.pathname,ref:document.referrer}),keepalive:true});}catch(e){}}if(location.pathname.indexOf("/api/")!==0)t("view");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a,button");if(!a)return;var h=(a.getAttribute&&a.getAttribute("href"))||"";if(h.indexOf("tel:")===0)t("tel");else if(h.indexOf("sms:")===0)t("sms");else if(a.id==="submitBtn")t("contact");},true);})();</script>
 </body>
 </html>`;
 }
