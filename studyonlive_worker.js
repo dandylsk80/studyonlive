@@ -465,7 +465,7 @@ function tgDescribe(path) {
   const r = REGION_MAP[p0];
   if (r) {
     const subj = seg[1] && SUBJECT_MAP[seg[1]] ? SUBJECT_MAP[seg[1]].name : null;
-    return subj ? r.name + ' · ' + subj : r.name;
+    return (subj ? r.name + ' ' + subj : r.name) + ' 화상과외';
   }
 
   return '일반 페이지';
@@ -510,7 +510,7 @@ async function tgNotify(env, type, page, ref, ua) {
   L.push('');
   L.push('사이트: ' + TG_SITE + ' (' + TG_DOMAIN + ')');
   L.push('페이지: ' + TG_ORIGIN + page);
-  L.push('한글: ' + tgDescribe(page));
+  L.push('검색 키워드: ' + tgDescribe(page));
   L.push('유입: ' + tgRef(ref));
   L.push('기기: ' + (/Mobile|Android|iPhone|iPad/i.test(ua || '') ? '모바일' : 'PC'));
   L.push('시각: ' + tgTime() + ' (KST)');
