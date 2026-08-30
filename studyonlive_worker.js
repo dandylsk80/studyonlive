@@ -1,3 +1,41 @@
+function reEsc(x){ return x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); }
+/* 이름 뒤 조사를 받침에 맞게 고른다 (danmalgi 검증본을 13개 공통으로 사용) */
+function josaFor(word,j){
+  const ch=String(word).charCodeAt(String(word).length-1)-0xAC00;
+  const hasJ=(ch>=0&&ch<=11171)?((ch%28)!==0):false;
+  const isRieul=(ch>=0&&ch<=11171)?((ch%28)===8):false;
+  switch(j){
+    case "\uc740": case "\ub294": return hasJ?"\uc740":"\ub294";
+    case "\uc774": case "\uac00": return hasJ?"\uc774":"\uac00";
+    case "\uc744": case "\ub97c": return hasJ?"\uc744":"\ub97c";
+    case "\uc640": case "\uacfc": return hasJ?"\uacfc":"\uc640";
+    case "\uc73c\ub85c": case "\ub85c": return (!hasJ||isRieul)?"\ub85c":"\uc73c\ub85c";
+    case "\uc774\ub098": case "\ub098": return hasJ?"\uc774\ub098":"\ub098";
+    case "\uc774\ub77c": case "\ub77c": return hasJ?"\uc774\ub77c":"\ub77c";
+    case "\uc774\uba70": case "\uba70": return hasJ?"\uc774\uba70":"\uba70";
+    default: return j;
+  }
+}
+/* 주어진 단어들 뒤에 붙은 조사만 골라 교정한다 (동사 어미는 건드리지 않음) */
+function fixJosa(s,names){
+  for(const nm of names){
+    if(!nm) continue;
+    s=s.replace(new RegExp(reEsc(String(nm))+"(\uc73c\ub85c|\uc774\ub098|\uc774\ub77c|\uc774\uba70|[\uc740\ub294\uc774\uac00\uc744\ub97c\uc640\uacfc\ub85c\ub098\ub77c\uba70])(?=[\\s.,!?)\u00b7\u2019\u201d]|$)","g"),
+      function(m,j){ return nm+josaFor(nm,j); });
+  }
+  return s;
+}
+
+/* ===== 한국어 조사 자동 판별 (받침 유무) — 13개 사이트 공통 =====
+   J("강남동","은","는") -> "강남동은"   J("제주시","은","는") -> "제주시는"
+   J(x,"으로","로") 은 ㄹ 받침도 처리한다. 한글이 아니면 받침 없음으로 본다. */
+function hasJong(w){ if(w==null) return false; w=String(w).trim(); if(!w) return false;
+  const c=w.charCodeAt(w.length-1); return (c>=0xAC00&&c<=0xD7A3) ? (c-0xAC00)%28!==0 : false; }
+function J(w,a,b){ w=String(w==null?"":w);
+  const c=w.charCodeAt(w.length-1)-0xAC00, j=(c<0||c>11171)?-1:c%28;
+  if(a==="\uc73c\ub85c"||b==="\ub85c") return w+((j<=0||j===8)?"\ub85c":"\uc73c\ub85c");
+  return w+(j>0?a:b); }
+
 /* ===== 방문 상세 메타: 기기 / 유입경로 / 검색 키워드 ===== */
 function tkDevice(ua){
   ua = ua || "";
@@ -204,7 +242,7 @@ function getDates(seed){
 
 function buildContent(regionName,shortRegion,subjectName,slug,subjSlug,nearbyLinks){
   const seed=hash(slug+"|"+subjectName);const rand=rng(seed);
-  const sub=(t)=>t.replaceAll("{지역}",shortRegion).replaceAll("{과목}",subjectName);
+  const sub=(t)=>fixJosa(t.replaceAll("{지역}",shortRegion).replaceAll("{과목}",subjectName),[shortRegion,subjectName]);
   const TITLES={
     intro:[`${shortRegion} ${subjectName} 화상과외, 왜 선택할까요?`,`${shortRegion}에서 ${subjectName} 화상과외를 찾고 계신가요?`,`${shortRegion} ${subjectName} 화상과외 시작 전에`,`${shortRegion} ${subjectName} 과외, 화상으로 바뀌고 있습니다`],
     why:[`지역을 넘어서는 ${subjectName} 선생님 매칭`,`${shortRegion} 화상과외의 강점`,`왜 ${shortRegion} 학생에게 화상과외가 맞을까`,`${shortRegion}에서 화상과외가 답인 이유`],
@@ -303,7 +341,7 @@ function buildContent(regionName,shortRegion,subjectName,slug,subjSlug,nearbyLin
     benefit:`<div class="benefit">
       <div class="bcard"><div class="h"><span class="e">💰</span>합리적인 비용</div><p>교통비·이동 시간이 빠져 같은 예산으로 더 알찬 ${subjectName} 수업이 가능합니다.</p></div>
       <div class="bcard"><div class="h"><span class="e">🎯</span>맞춤 1:1</div><p>${shortRegion} 학생 한 명만을 위한 수업으로 진도와 난이도를 조절합니다.</p></div>
-      <div class="bcard"><div class="h"><span class="e">🔒</span>안전한 학습</div><p>밤늦은 이동 없이 집에서 안전하게 ${subjectName}을 공부합니다.</p></div>
+      <div class="bcard"><div class="h"><span class="e">🔒</span>안전한 학습</div><p>밤늦은 이동 없이 집에서 안전하게 ${J(subjectName,"을","를")} 공부합니다.</p></div>
       <div class="bcard"><div class="h"><span class="e">📈</span>꾸준한 관리</div><p>과제·복습까지 챙겨 ${subjectName} 학습이 끊기지 않도록 합니다.</p></div>
     </div>`,
   };
@@ -592,7 +630,7 @@ export default {
     // robots.txt
     if (path === "/robots.txt") {
       return new Response(
-        `User-agent: *\nAllow: /\nSitemap: https://${SITE.domain}/sitemap.xml\n#DaumWebMasterTool:b60bbf918a59e93331f9ec53dc2a39ea938384c1e4e51dd5dccf10ac7a040dc1:MeMBEDgiMukoYtb9XFlQLw==\n`,
+        `User-agent: *\nAllow: /\n\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: OAI-SearchBot\nAllow: /\n\nUser-agent: ChatGPT-User\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nUser-agent: Claude-Web\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nUser-agent: Applebot-Extended\nAllow: /\n\nSitemap: https://${SITE.domain}/sitemap.xml\n#DaumWebMasterTool:b60bbf918a59e93331f9ec53dc2a39ea938384c1e4e51dd5dccf10ac7a040dc1:MeMBEDgiMukoYtb9XFlQLw==\n`,
         { headers: { "content-type": "text/plain" } }
       );
     }
@@ -972,7 +1010,7 @@ function pageSubject(s) {
     </header>
     <article class="sub-body">
       <h2>${s.name} 화상과외란?</h2>${intro}
-      <h2>왜 ${s.name}은 1:1 화상과외가 효과적일까요?</h2>${why}
+      <h2>왜 ${J(s.name,"은","는")} 1:1 화상과외가 효과적일까요?</h2>${why}
       <h2>${s.name} 화상과외 영역별 커리큘럼</h2>${areas}
       <h2>대상별 ${s.name} 화상과외</h2>${levels}
       <h2>이런 학생에게 ${s.name} 화상과외를 추천합니다</h2>
