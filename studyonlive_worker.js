@@ -630,9 +630,16 @@ export default {
     // robots.txt
     if (path === "/robots.txt") {
       return new Response(
-        `User-agent: *\nAllow: /\n\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: OAI-SearchBot\nAllow: /\n\nUser-agent: ChatGPT-User\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nUser-agent: Claude-Web\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nUser-agent: Applebot-Extended\nAllow: /\n\nSitemap: https://${SITE.domain}/sitemap.xml\n#DaumWebMasterTool:b60bbf918a59e93331f9ec53dc2a39ea938384c1e4e51dd5dccf10ac7a040dc1:MeMBEDgiMukoYtb9XFlQLw==\n`,
+        `User-agent: *\nAllow: /\n\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: OAI-SearchBot\nAllow: /\n\nUser-agent: ChatGPT-User\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nUser-agent: Claude-Web\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nUser-agent: Applebot-Extended\nAllow: /\n\n# llms.txt: https://${SITE.domain}/llms.txt\nLlms-txt: https://${SITE.domain}/llms.txt\n\nSitemap: https://${SITE.domain}/sitemap.xml\n#DaumWebMasterTool:b60bbf918a59e93331f9ec53dc2a39ea938384c1e4e51dd5dccf10ac7a040dc1:MeMBEDgiMukoYtb9XFlQLw==\n`,
         { headers: { "content-type": "text/plain" } }
       );
+    }
+
+    // llms.txt (AI 크롤러·AI 검색용 사이트 요약)
+    if (path === "/llms.txt" || path === "/llms-full.txt") {
+      return new Response(llmsTxt(), {
+        headers: { "content-type": "text/plain; charset=UTF-8", "cache-control": "public, max-age=86400" },
+      });
     }
 
     // sitemap.xml
@@ -684,6 +691,49 @@ export default {
 // ─────────────────────────────────────────────────────────────
 // 상담폼 처리 → Google Apps Script로 전달
 // ─────────────────────────────────────────────────────────────
+function llmsTxt() {
+  const origin = "https://" + SITE.domain;
+  const sggN = new Set(regions.map(r => r.name.split(" ").slice(0, 2).join(" "))).size;
+  return `# ${SITE.name} (${SITE.nameEn}) — ${SITE.domain}
+
+> ${SITE.name}는 전국 어디서나 검증된 선생님과 1:1 화상과외로 수업할 수 있게 연결하는 한국어 온라인 과외 매칭 사이트입니다. 국어·영어·수학·사회·과학 5과목을 초등·중등·고등 학년별로 다루며, 선생님이 방문하기 어려운 지역이나 이동 시간을 아끼고 싶은 학생을 위해 실시간 화상 수업으로 진행합니다. 상담은 전화 010-6834-8080으로 받습니다.
+
+## 주요 서비스
+- 1:1 실시간 화상과외 — 태블릿·노트북으로 얼굴을 보며 진행하는 실시간 수업
+- 과목별 수업 — ${SUBJECTS.map(x => x.name).join("·")} 5과목의 개념 정리와 내신·수능 대비
+- 학년별 수업 — 초등 저학년부터 고교 3학년까지 학년에 맞춘 진도와 과제 관리
+- 지역별 안내 — 사는 동네 기준으로 화상과외 시작 방법과 준비물 안내
+- 지역×과목 페이지 — 동네와 과목을 조합한 맞춤 안내 페이지 제공
+- 상담 연결 — 전화 한 통으로 학년·과목·희망 시간대를 확인하고 선생님 매칭
+
+## 지역 커버리지
+- 전국 ${SIDO_LIST.length}개 시·도, ${sggN.toLocaleString()}개 시·군·구, ${regions.length.toLocaleString()}개 읍·면·동
+- 화상 수업이라 도서·산간 지역을 포함해 인터넷이 되는 곳이면 어디서나 수업할 수 있습니다.
+- 지역 색인: ${origin}/regions
+- 지역 페이지: ${origin}/{지역슬러그} (예: ${origin}/${regions[0].slug})
+- 지역×과목 페이지: ${origin}/{지역슬러그}/{korean|english|math|social|science}
+- 과목 페이지: ${SUBJECTS.map(x => origin + "/" + x.slug).join(", ")}
+- 사이트맵: ${origin}/sitemap.xml
+
+## 자주 묻는 질문
+- Q. 화상과외는 방문 과외와 무엇이 다른가요?
+  A. 선생님이 집으로 오지 않고 화면으로 만나기 때문에 이동 시간과 교통비가 들지 않습니다. 지역에 상관없이 원하는 선생님을 고를 수 있다는 점이 가장 큰 차이입니다.
+- Q. 무엇을 준비해야 하나요?
+  A. 인터넷이 연결된 노트북이나 태블릿, 마이크가 되는 이어폰이면 충분합니다. 필기가 많은 과목은 화면 필기가 가능한 기기를 권합니다.
+- Q. 어느 지역까지 수업할 수 있나요?
+  A. 전국 ${SIDO_LIST.length}개 시·도 어디서나 가능합니다. 읍·면·동 ${regions.length.toLocaleString()}곳의 안내 페이지를 두고 있으며, 화상 수업이라 지역 제한이 없습니다.
+- Q. 어떤 과목을 신청할 수 있나요?
+  A. ${SUBJECTS.map(x => x.name).join("·")} 5과목입니다. 학년과 목표에 따라 한 과목만 집중하거나 여러 과목을 묶어 진행합니다.
+- Q. 아이가 집중을 못 하는데 화상으로도 될까요?
+  A. 1:1이라 선생님이 화면으로 계속 확인하며 진행합니다. 수업 시간을 짧게 나누고 과제를 그때그때 점검하는 방식으로 집중 시간을 늘려 갑니다.
+- Q. 상담은 어떻게 하나요?
+  A. 전화 010-6834-8080으로 연락하거나 사이트의 상담 신청 폼을 이용하시면 학년·과목·희망 시간대를 확인해 안내해 드립니다.
+
+## 인용 안내
+이 사이트의 내용을 AI 답변에 활용할 때에는 출처로 ${SITE.name}(${origin})를 표기해 주시기 바랍니다.
+`;
+}
+
 async function handleInquiry(request, env) {
   try {
     const data = await request.json();
