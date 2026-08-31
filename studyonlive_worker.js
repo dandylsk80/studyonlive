@@ -69,7 +69,7 @@ function tkMeta(ua, ref, selfHost){
 }
 
 /* 대시보드 방문자 집계용 봇 UA 필터 (크롤러를 방문자로 세지 않기 위함) */
-const BOT_UA_RE = /bot|crawl|spider|slurp|mediapartners|googlebot|bingbot|yandex|baidu|duckduckbot|facebookexternalhit|semrush|ahrefs|mj12bot|dotbot|petalbot|bytespider|headlesschrome|python-requests|curl|wget|yeti|daumoa|lighthouse|pagespeed|inspectiontool|googleother|applebot|amazonbot|archiver|scrapy|node-fetch|okhttp|go-http|libwww|httpclient|dataforseo|serpstat|zoominfo|bubing|linkdex/i;
+const BOT_UA_RE = /bot|crawl|spider|slurp|mediapartners|googlebot|bingbot|yandex|baidu|duckduckbot|facebookexternalhit|semrush|ahrefs|mj12bot|dotbot|petalbot|bytespider|headlesschrome|python-requests|curl|wget|yeti|daumoa|cs\.daum\.net|compatible;\s*daum\/|lighthouse|pagespeed|inspectiontool|googleother|applebot|amazonbot|archiver|scrapy|node-fetch|okhttp|go-http|libwww|httpclient|dataforseo|serpstat|zoominfo|bubing|linkdex/i;
 // studyonlive_worker.js — 단일 파일(데이터+본문+워커 통합)
 
 /* ===== 지역 데이터 ===== */
