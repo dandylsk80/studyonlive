@@ -2611,6 +2611,21 @@ document.body.classList.add('dark-home');
 // ─────────────────────────────────────────────────────────────
 // 페이지: 지역 (과목 선택)
 // ─────────────────────────────────────────────────────────────
+/* 주변 지역: 같은 시·군·구를 먼저 채우고 모자라면 같은 시·도로 넓힌다 */
+function nearbyBlock(r) {
+  const E = (v) => String(v == null ? "" : v).replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+  const key = (x) => x.name.split(" ").slice(0, -1).join(" ");
+  const myGu = key(r), mySido = r.sido || r.name.split(" ")[0];
+  const out = [], seen = new Set([r.slug]);
+  for (const x of regions) { if (out.length >= 12) break; if (seen.has(x.slug)) continue; if (key(x) !== myGu) continue; seen.add(x.slug); out.push(x); }
+  for (const x of regions) { if (out.length >= 12) break; if (seen.has(x.slug)) continue; if ((x.sido || x.name.split(" ")[0]) !== mySido) continue; seen.add(x.slug); out.push(x); }
+  if (!out.length) return "";
+  const links = out.map(x => `<a href="/${x.slug}">${E(x.dong || x.name.split(" ").pop())}<small style="color:var(--muted);margin-left:4px">${E(key(x).split(" ").pop())}</small></a>`).join("");
+  return `<section class="sec"><div class="wrap narrow">
+  <h2 style="font-size:18px;margin-bottom:10px">주변 지역</h2>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:12px">${E(mySido)}의 다른 지역에서도 1:1 화상과외를 연결합니다.</p>
+  <div class="chips">${links}</div></div></section>`;
+}
 function pageRegion(r) {
   const sn = shortName(r.name);
   const subjCards = SUBJECTS.map(
@@ -2654,7 +2669,7 @@ function pageRegion(r) {
     title: `${sn} 화상과외 | ${SITE.name}`,
     desc: `${r.name} 1:1 화상과외 매칭. 국·영·수·사·과 전과목 온라인 수업, 집에서 검증된 선생님과 실시간 1:1 과외. 무료 상담 신청.`,
     canonical: `https://${SITE.domain}/${r.slug}`,
-    body,
+    body: body + nearbyBlock(r),
   });
 }
 
