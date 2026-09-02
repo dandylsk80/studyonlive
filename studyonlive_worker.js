@@ -1330,6 +1330,13 @@ function smLastmod(key){
   const periods = Math.floor((Date.now()/SM_DAY - off)/SM_PERIOD);
   return new Date((periods*SM_PERIOD + off)*SM_DAY).toISOString().slice(0,10);
 }
+/* RSS 정렬용 날짜: URL 마다 60일 주기로 밀린다. 매일 다른 1/60 묶음이 최신이 되어
+   "최근 항목 위주"를 유지하면서 피드가 날마다 바뀐다. */
+function rssRankDate(u){
+  const off = smHash(u) % 60;
+  const periods = Math.floor((Date.now()/SM_DAY - off)/60);
+  return new Date((periods*60 + off)*SM_DAY);
+}
 function sitemap() {
   const urls = [`https://${SITE.domain}/`, `https://${SITE.domain}/list`, `https://${SITE.domain}/regions`];
   for (const s of SUBJECTS) {
@@ -1374,18 +1381,22 @@ function rss() {
   const base = `https://${SITE.domain}`;
   const now = new Date().toUTCString();
   const xe = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  /* 최근 항목 위주로 매일 회전. 1,000개는 사실상 전체라 피드 구실을 못 해 100개로 줄였다 */
+  const cand = [];
+  for (const r of regions) for (const s of SUBJECTS) cand.push({ r: r, s: s, m: rssRankDate(`${base}/${r.slug}/${s.slug}`) });
+  cand.sort((a, b) => b.m - a.m);
   let items = "", count = 0;
-  for (const r of regions) {
-    for (const s of SUBJECTS) {
+  {
+    for (const c of cand.slice(0, 100)) {
+      const r = c.r, s = c.s;
       const u = `${base}/${r.slug}/${s.slug}`;
       items +=
         `  <item><title>${xe(r.name + " " + s.name + " 1:1 화상과외")}</title>` +
         `<link>${u}</link><guid>${u}</guid>` +
         `<description>${xe(r.name + " " + s.name + " 온라인 1:1 화상과외 매칭. 집에서 검증된 선생님과 실시간 수업, 무료 상담.")}</description>` +
         `<pubDate>${now}</pubDate></item>\n`;
-      if (++count >= 1000) break;
+      if (++count >= 100) break;
     }
-    if (count >= 1000) break;
   }
   const body =
     `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n<channel>\n` +
