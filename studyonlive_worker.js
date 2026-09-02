@@ -738,6 +738,10 @@ export default {
       return new Response(JSON.stringify({ requested: list.length, sent: res.sent, failed: res.failed, batches: res.batches }), { headers: { "content-type": "application/json; charset=UTF-8" } });
     }
 
+    if (path === "/regions.json") {
+      return new Response(JSON.stringify(buildRegionsBySido()), { headers: { "content-type": "application/json; charset=UTF-8", "cache-control": "public, max-age=86400" } });
+    }
+
     // sitemap.xml
     if (path === "/sitemap.xml") {
       return sitemap();
@@ -1414,7 +1418,7 @@ function rss() {
 function html(body, status = 200) {
   return new Response(body, {
     status,
-    headers: { "content-type": "text/html;charset=UTF-8" },
+    headers: { "cache-control": "public, max-age=600", "content-type": "text/html;charset=UTF-8" },
   });
 }
 
@@ -2366,12 +2370,13 @@ function fillForm(addr,subj){openForm({address:addr,subject:subj})}
 // ─────────────────────────────────────────────────────────────
 // 페이지: 메인
 // ─────────────────────────────────────────────────────────────
-function pageHome() {
-  // 레이더 지도 SVG
-  const radarSvg = buildRadarMap();
-
-  // 시도별 동 데이터 (JS로 전달, 각 시도 최대 40개)
-  const regionsBySido = {};
+/* 지역 선택기 데이터. 예전에는 전국 4,776개를 홈 HTML 에 통째로 넣어
+   메인이 249KB 늘어났다. 이제 /regions.json 으로 따로 내보내고,
+   홈에는 첫 화면에 필요한 서울만 인라인한다. */
+let _regionsBySido = null;
+function buildRegionsBySido() {
+  if (_regionsBySido) return _regionsBySido;
+  const out = {};
   for (const sd of SIDO_LIST) {
     const list = regions.filter((r) => r.slug.startsWith(sd.slug + "-"));
     const guMap = {}, guOrder = [];
@@ -2383,9 +2388,20 @@ function pageHome() {
       if (!guMap[guSlug]) { guMap[guSlug] = { g: gu, s: guSlug, c: [] }; guOrder.push(guSlug); }
       guMap[guSlug].c.push({ d: r.dong, s: r.slug });
     }
-    regionsBySido[sd.slug] = { name: sd.name, gus: guOrder.map((k) => guMap[k]) };
+    out[sd.slug] = { name: sd.name, gus: guOrder.map((k) => guMap[k]) };
   }
-  const regionsJson = JSON.stringify(regionsBySido);
+  _regionsBySido = out;
+  return out;
+}
+
+function pageHome() {
+  // 레이더 지도 SVG
+  const radarSvg = buildRadarMap();
+
+  const _all = buildRegionsBySido();
+  /* 첫 화면은 서울의 "시군구 목록"만 보여준다. 동 목록(c)은 시군구를 눌러야 필요하므로
+     인라인에서 빼고 /regions.json 에서 받아온다. */
+  const regionsJson = JSON.stringify({ seoul: { name: _all.seoul.name, gus: _all.seoul.gus.map((g) => ({ g: g.g, s: g.s, c: [] })) } });
 
   // 메인 히어로용 실사 이미지 (고정)
   const heroImg = opt(CDN+"main/aa.jpg",900);
@@ -2524,11 +2540,25 @@ function pageHome() {
 
 <script>
 var REGIONS_BY_SIDO=${regionsJson};
+var REGIONS_LOADED=false,REGIONS_PENDING=null;
+function loadRegions(cb){
+  if(REGIONS_LOADED){if(cb)cb();return;}
+  if(!REGIONS_PENDING){
+    REGIONS_PENDING=fetch('/regions.json').then(function(r){return r.json();}).then(function(j){
+      for(var k in j){REGIONS_BY_SIDO[k]=j[k];}
+      REGIONS_LOADED=true;
+    }).catch(function(){});
+  }
+  REGIONS_PENDING.then(function(){if(cb)cb();});
+}
+if(window.requestIdleCallback){requestIdleCallback(function(){loadRegions();},{timeout:4000});}
+else{setTimeout(function(){loadRegions();},1500);}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 var curSido='seoul',curView='gu';
 function setHead(name,cnt,unit){document.getElementById('rSelName').textContent=name;document.getElementById('rSelCnt').textContent=cnt;var u=document.getElementById('rSelUnit');if(u)u.textContent=unit;}
 function renderGus(sido){
-  var data=REGIONS_BY_SIDO[sido];if(!data)return;
+  var data=REGIONS_BY_SIDO[sido];
+  if(!data){var el=document.getElementById('rDongs');if(el)el.innerHTML='<a class="gu"><span class="dn">불러오는 중…</span></a>';loadRegions(function(){renderGus(sido);});return;}
   curSido=sido;curView='gu';
   setHead(data.name,data.gus.length,'시군구');
   var html='';
@@ -2537,7 +2567,8 @@ function renderGus(sido){
   document.getElementById('rDongs').innerHTML=html;
 }
 function renderDongsOf(sido,guSlug){
-  var data=REGIONS_BY_SIDO[sido];if(!data)return;
+  var data=REGIONS_BY_SIDO[sido];
+  if(!data||!REGIONS_LOADED){var el=document.getElementById('rDongs');if(el)el.innerHTML='<a class="gu"><span class="dn">불러오는 중…</span></a>';loadRegions(function(){renderDongsOf(sido,guSlug);});return;}
   var gu=null;for(var i=0;i<data.gus.length;i++){if(data.gus[i].s===guSlug){gu=data.gus[i];break;}}
   if(!gu)return;
   curView='dong';
