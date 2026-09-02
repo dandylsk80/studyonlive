@@ -706,7 +706,7 @@ export default {
     // robots.txt
     if (path === "/robots.txt") {
       return new Response(
-        `User-agent: *\nAllow: /\n\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: OAI-SearchBot\nAllow: /\n\nUser-agent: ChatGPT-User\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nUser-agent: Claude-Web\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nUser-agent: Applebot-Extended\nAllow: /\n\n# llms.txt: https://${SITE.domain}/llms.txt\nLlms-txt: https://${SITE.domain}/llms.txt\n\nSitemap: https://${SITE.domain}/sitemap.xml\n#DaumWebMasterTool:b60bbf918a59e93331f9ec53dc2a39ea938384c1e4e51dd5dccf10ac7a040dc1:MeMBEDgiMukoYtb9XFlQLw==\n`,
+        `User-agent: *\nAllow: /\n\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: OAI-SearchBot\nAllow: /\n\nUser-agent: ChatGPT-User\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nUser-agent: Claude-Web\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nUser-agent: Applebot-Extended\nAllow: /\n\n# llms.txt: https://${SITE.domain}/llms.txt\nLlms-txt: https://${SITE.domain}/llms.txt\n\n# 전체 목록: https://${SITE.domain}/list\nSitemap: https://${SITE.domain}/sitemap.xml\n#DaumWebMasterTool:b60bbf918a59e93331f9ec53dc2a39ea938384c1e4e51dd5dccf10ac7a040dc1:MeMBEDgiMukoYtb9XFlQLw==\n`,
         { headers: { "content-type": "text/plain" } }
       );
     }
@@ -738,6 +738,10 @@ export default {
     }
 
     // 전국 지역 목록
+    if (path === "/list") {
+      return html(pageList());
+    }
+
     if (path === "/regions") {
       return html(pageAllRegions());
     }
@@ -1174,6 +1178,39 @@ function pageSubject(s) {
   });
 }
 
+function pageList() {
+  /* 이 파일의 E() 는 클라이언트 스크립트 안에만 있어 서버에서 쓸 수 없다 */
+  const E = (v) => String(v == null ? "" : v).replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+  const CAP = 60;
+  const map = {}, order = [];
+  for (const r of regions) {
+    const parts = r.name.split(" ");
+    const sido = r.sido || parts[0];
+    const dong = r.dong || parts[parts.length - 1];
+    if (!map[sido]) { map[sido] = []; order.push(sido); }
+    map[sido].push([dong, r.slug]);
+  }
+  const SO = ["서울특별시","부산광역시","대구광역시","인천광역시","광주광역시","대전광역시","울산광역시","세종특별자치시","경기도","강원특별자치도","충청북도","충청남도","전북특별자치도","전라남도","경상북도","경상남도","제주특별자치도"];
+  order.sort((a,b)=>(SO.indexOf(a)<0?99:SO.indexOf(a))-(SO.indexOf(b)<0?99:SO.indexOf(b)));
+  let secs = "";
+  for (const sido of order) {
+    const all = map[sido];
+    const shown = all.slice(0, CAP);
+    const links = shown.map(([d, s]) => `<a href="/${s}">${E(d)}</a>`).join("");
+    const more = all.length > CAP
+      ? `<a href="/regions" style="font-weight:700">…외 ${(all.length - CAP).toLocaleString()}개 · 전체 지역 →</a>` : "";
+    secs += `<h3 style="font-size:15px;font-weight:800;margin:22px 0 10px">${E(sido)} <span style="font-weight:500;color:var(--muted)">${all.length.toLocaleString()}개 지역</span></h3><div class="chips">${links}${more}</div>`;
+  }
+  const subj = SUBJECTS.map(s => `<a href="/${s.slug}">${s.icon} ${E(s.name)}</a>`).join("");
+  const body = `<section class="sec"><div class="wrap narrow">
+  <div class="bc"><a href="/">홈</a> › 전체 목록</div>
+  <h1 style="font-size:26px;margin:10px 0 8px">전체 목록</h1>
+  <p style="color:var(--muted);margin-bottom:18px">${SITE.name}의 과목·지역 페이지를 한곳에 모았습니다. 전국 ${regions.length.toLocaleString()}개 지역에서 1:1 화상과외를 연결합니다.</p>
+  <h3 style="font-size:15px;font-weight:800;margin:22px 0 10px">주요 페이지</h3>
+  <div class="chips"><a href="/">홈</a><a href="/regions">전국 지역</a>${subj}</div>
+  ${secs}</div></section><script type="application/ld+json">${JSON.stringify({"@context":"https://schema.org","@type":"CollectionPage","name":"전체 목록","url":`https://${SITE.domain}/list`,"isPartOf":{"@type":"WebSite","name":SITE.name,"url":`https://${SITE.domain}/`}})}<\/script>`;
+  return layout({ title: `전체 목록 | ${SITE.name}`, desc: `${SITE.name}의 과목·지역 페이지 전체 목록. 전국 ${regions.length.toLocaleString()}개 지역 1:1 화상과외.`, canonical: `https://${SITE.domain}/list`, body });
+}
 function pageAllRegions() {
   const map = {};
   const order = [];
@@ -1225,7 +1262,7 @@ function pageAllRegions() {
 const SVG_FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#fff"/><text x="32" y="44" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="900" letter-spacing="-1" fill="#e11d2a">ON</text></svg>';
 
 function sitemap() {
-  const urls = [`https://${SITE.domain}/`, `https://${SITE.domain}/regions`];
+  const urls = [`https://${SITE.domain}/`, `https://${SITE.domain}/list`, `https://${SITE.domain}/regions`];
   for (const s of SUBJECTS) {
     urls.push(`https://${SITE.domain}/${s.slug}`);
   }
@@ -2157,6 +2194,7 @@ const FOOTER = `
     </div>
     <div class="foot-links">
       <a href="/regions">전국 화상과외</a>
+      <a href="/list">전체 목록</a>
     </div>
   </div>
   <div class="foot-bot">
