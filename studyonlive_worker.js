@@ -671,6 +671,13 @@ async function tgNotify(env, type, page, ref, ua) {
 }
 
 export default {
+  /* 매일 1회 IndexNow 자동 제출. URL 이 많아 하루 1,000개씩 돌아가며 보낸다 */
+  async scheduled(event, env, ctx) {
+    const all = indexnowUrls(), PER = 1000;
+    const day = Math.floor(Date.now() / 86400000);
+    const start = all.length ? (day * PER) % all.length : 0;
+    ctx.waitUntil(submitIndexNow(all.slice(start, start + PER)));
+  },
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/+$/, "") || "/";
@@ -716,6 +723,19 @@ export default {
       return new Response(llmsTxt(), {
         headers: { "content-type": "text/plain; charset=UTF-8", "cache-control": "public, max-age=86400" },
       });
+    }
+
+    if (path === "/" + INDEXNOW_KEY + ".txt") {
+      return new Response(INDEXNOW_KEY, { headers: { "content-type": "text/plain; charset=UTF-8" } });
+    }
+    if (path === "/indexnow/today" || path === "/indexnow/all") {
+      if (url.searchParams.get("key") !== INDEXNOW_KEY) return new Response("forbidden", { status: 403 });
+      const all = indexnowUrls();
+      const PER = 1000;
+      const day = Math.floor(Date.now() / 86400000);
+      const list = path.endsWith("/all") ? all : all.slice((day * PER) % Math.max(1, all.length), (day * PER) % Math.max(1, all.length) + PER);
+      const res = await submitIndexNow(list);
+      return new Response(JSON.stringify({ requested: list.length, sent: res.sent, failed: res.failed, batches: res.batches }), { headers: { "content-type": "application/json; charset=UTF-8" } });
     }
 
     // sitemap.xml
@@ -1261,6 +1281,45 @@ function pageAllRegions() {
 
 const SVG_FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#fff"/><text x="32" y="44" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="900" letter-spacing="-1" fill="#e11d2a">ON</text></svg>';
 
+
+/* ── IndexNow (색인 즉시 알림) ─────────────────────────────
+   api.indexnow.org / bing 은 Workers 공용 아웃바운드 IP 에 429 를 주는 일이
+   많아, 실패하면 다음 엔드포인트로 넘어간다 (danmalgi 검증본과 동일). */
+const INDEXNOW_KEY = "5d130e0f97260fad8124615334dcd8c8";
+const INDEXNOW_ENDPOINTS = [
+  "https://api.indexnow.org/indexnow",
+  "https://yandex.com/indexnow",
+  "https://search.seznam.cz/indexnow"
+];
+function indexnowUrls(){
+  const o = "https://" + SITE.domain;
+  const u = [o+"/", o+"/list", o+"/regions"];
+  for (const s of SUBJECTS) u.push(o+"/"+s.slug);
+  for (const r of regions) { u.push(o+"/"+r.slug); for (const s of SUBJECTS) u.push(o+"/"+r.slug+"/"+s.slug); }
+  return u;
+}
+async function submitIndexNow(urls){
+  if(!INDEXNOW_KEY || !urls || !urls.length) return {sent:0,batches:0,failed:0,diag:[]};
+  const origin = "https://" + SITE.domain;
+  const host = origin.replace(/^https?:\/\//,"");
+  const keyLocation = origin + "/" + INDEXNOW_KEY + ".txt";
+  let sent=0, batches=0, failed=0; const diag=[];
+  for(let i=0;i<urls.length;i+=1000){
+    const batch=urls.slice(i,i+1000); batches++;
+    const body=JSON.stringify({host:host,key:INDEXNOW_KEY,keyLocation:keyLocation,urlList:batch});
+    let ok=false;
+    for(const ep of INDEXNOW_ENDPOINTS){
+      try{
+        const r=await fetch(ep,{method:"POST",headers:{"Content-Type":"application/json; charset=utf-8"},body:body});
+        let rb=""; try{ rb=(await r.text()).slice(0,200); }catch(e2){}
+        diag.push({batch:batches,urls:batch.length,endpoint:ep,status:r.status,body:rb});
+        if(r.status!==429){ ok=true; break; }
+      }catch(e){ diag.push({batch:batches,urls:batch.length,endpoint:ep,error:String(e).slice(0,120)}); }
+    }
+    if(ok) sent+=batch.length; else failed+=batch.length;
+  }
+  return {sent:sent,batches:batches,failed:failed,diag:diag};
+}
 function sitemap() {
   const urls = [`https://${SITE.domain}/`, `https://${SITE.domain}/list`, `https://${SITE.domain}/regions`];
   for (const s of SUBJECTS) {
