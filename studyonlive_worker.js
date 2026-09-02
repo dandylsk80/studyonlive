@@ -1320,6 +1320,16 @@ async function submitIndexNow(urls){
   }
   return {sent:sent,batches:batches,failed:failed,diag:diag};
 }
+/* ── sitemap lastmod ────────────────────────────────────────
+   URL 마다 다른 날짜를 주고 18일 주기로 갱신한다.
+   전 URL 을 매일 오늘로 찍으면 검색엔진이 신뢰하지 않는다(danmalgi 방식). */
+const SM_DAY = 86400000, SM_PERIOD = 18;
+function smHash(str){ let h=5381; const s=String(str); for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))>>>0; return h; }
+function smLastmod(key){
+  const off = smHash(key) % SM_PERIOD;
+  const periods = Math.floor((Date.now()/SM_DAY - off)/SM_PERIOD);
+  return new Date((periods*SM_PERIOD + off)*SM_DAY).toISOString().slice(0,10);
+}
 function sitemap() {
   const urls = [`https://${SITE.domain}/`, `https://${SITE.domain}/list`, `https://${SITE.domain}/regions`];
   for (const s of SUBJECTS) {
@@ -1333,7 +1343,7 @@ function sitemap() {
   }
   const body =
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-    urls.map((u) => `  <url><loc>${u}</loc></url>`).join("\n") +
+    urls.map((u) => `  <url><loc>${u}</loc><lastmod>${smLastmod(u)}</lastmod></url>`).join("\n") +
     `\n</urlset>`;
   return new Response(body, { headers: { "content-type": "application/xml" } });
 }
