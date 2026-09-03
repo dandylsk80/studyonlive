@@ -1492,7 +1492,7 @@ ${body}
 ${FOOTER}
 ${FORM_MODAL}
 <script>${JS}</script>
-<script>(function(){var U="/api/track",S={},W=90000;function K(ty){return "tk_"+ty+"_"+location.pathname;}function seen(ty){var k=K(ty),n=Date.now();if(S[k]&&n-S[k]<W)return 1;try{var v=sessionStorage.getItem(k);if(v&&n-(+v)<W)return 1;}catch(e){}return 0;}function mark(ty){var k=K(ty),n=Date.now();S[k]=n;try{sessionStorage.setItem(k,""+n);}catch(e){}}function t(ty,b){try{var d=JSON.stringify({type:ty,page:location.pathname,ref:document.referrer,b:b||""}),ok=false;if(navigator.sendBeacon){try{ok=navigator.sendBeacon(U,new Blob([d],{type:"application/json"}));}catch(e){}}if(!ok){try{fetch(U,{method:"POST",headers:{"Content-Type":"application/json"},body:d,keepalive:true}).catch(function(){});}catch(e){}}}catch(e){}}function c(ty,b){if(seen(ty))return;mark(ty);t(ty,b);}function L(a){try{var s=(a.getAttribute&&a.getAttribute("aria-label"))||a.textContent||"";return s.replace(/\s+/g," ").trim().slice(0,40);}catch(e){return "";}}function h(e,early){var a=e.target&&e.target.closest&&e.target.closest("a,button,[data-tk]");if(!a)return;var k=(a.getAttribute&&a.getAttribute("data-tk"))||"",v=(a.getAttribute&&a.getAttribute("href"))||"";if(!k&&!v&&a.closest){var p=a.closest("a[href]");if(p){a=p;v=p.getAttribute("href")||"";}}if(k==="tel"||v.indexOf("tel:")===0)c("tel",L(a));else if(k==="sms"||v.indexOf("sms:")===0)c("sms",L(a));else if(!early&&k==="contact")c("contact",L(a));}document.addEventListener("pointerdown",function(e){h(e,1);},true);document.addEventListener("click",function(e){h(e,0);},true);if(location.pathname.indexOf("/api/")!==0)t("view");})();</script>
+<script>(function(){var U="/api/track",S={},W=90000;function K(ty){return "tk_"+ty+"_"+location.pathname;}function seen(ty){var k=K(ty),n=Date.now();if(S[k]&&n-S[k]<W)return 1;try{var v=sessionStorage.getItem(k);if(v&&n-(+v)<W)return 1;}catch(e){}return 0;}function mark(ty){var k=K(ty),n=Date.now();S[k]=n;try{sessionStorage.setItem(k,""+n);}catch(e){}}function t(ty,b){try{var d=JSON.stringify({type:ty,page:location.pathname,ref:document.referrer,b:b||""}),ok=false;if(navigator.sendBeacon){try{ok=navigator.sendBeacon(U,new Blob([d],{type:"application/json"}));}catch(e){}}if(!ok){try{fetch(U,{method:"POST",headers:{"Content-Type":"application/json"},body:d,keepalive:true}).catch(function(){});}catch(e){}}}catch(e){}}function c(ty,b){if(seen(ty))return;mark(ty);t(ty,b);}function L(a){try{var s=(a.getAttribute&&a.getAttribute("aria-label"))||a.textContent||"";return s.replace(/\s+/g," ").trim().slice(0,40);}catch(e){return "";}}function W(v){try{if(!/; wv\)/.test(navigator.userAgent))return;var m=/^(tel|sms):\+?([0-9]+)/.exec(v);if(!m)return;var sc=m[1]==="tel"?"tel":"smsto",ac=m[1]==="tel"?"DIAL":"SENDTO",done=0;var f=function(){done=1;};document.addEventListener("visibilitychange",f,{once:true});window.addEventListener("pagehide",f,{once:true});setTimeout(function(){if(done||document.visibilityState!=="visible")return;location.href="intent://"+m[2]+"#Intent;scheme="+sc+";action=android.intent.action."+ac+";end";},800);}catch(e){}}function h(e,early){var a=e.target&&e.target.closest&&e.target.closest("a,button,[data-tk]");if(!a)return;var k=(a.getAttribute&&a.getAttribute("data-tk"))||"",v=(a.getAttribute&&a.getAttribute("href"))||"";if(!k&&!v&&a.closest){var p=a.closest("a[href]");if(p){a=p;v=p.getAttribute("href")||"";}}if(k==="tel"||v.indexOf("tel:")===0){c("tel",L(a));if(!early)W(v);}else if(k==="sms"||v.indexOf("sms:")===0){c("sms",L(a));if(!early)W(v);}else if(!early&&k==="contact")c("contact",L(a));}document.addEventListener("pointerdown",function(e){h(e,1);},true);document.addEventListener("click",function(e){h(e,0);},true);if(location.pathname.indexOf("/api/")!==0)t("view");})();</script>
 </body>
 </html>`;
 }
@@ -2303,7 +2303,7 @@ body.dark-home footer .notice{color:#6b7693}
 const HEADER = `
 <header class="nav"><div class="wrap nav-in">
   <a href="/" class="logo"><span class="live-mark">LIVE</span><span class="wm">스터디<span class="on">ON</span>라이브</span></a>
-  <div style="display:flex;align-items:center;gap:8px"><a class="nav-tel" href="tel:010-6834-8080">📞 010-6834-8080</a><button class="nav-cta" onclick="openForm()">무료 상담 신청</button></div>
+  <div style="display:flex;align-items:center;gap:8px"><a class="nav-tel" href="tel:01068348080">📞 010-6834-8080</a><button class="nav-cta" onclick="openForm()">무료 상담 신청</button></div>
 </div></header>`;
 
 const FOOTER = `
@@ -2327,7 +2327,7 @@ const FOOTER = `
 </div></footer>`;
 
 const FORM_MODAL = `
-<div class="fabwrap"><a class="fab fab-tel" href="tel:010-6834-8080">📞 전화상담</a><a class="fab fab-sms" href="sms:010-6834-8080">✉️ 문자상담</a><button class="fab" onclick="openForm()">💬 무료 상담</button></div>
+<div class="fabwrap"><a class="fab fab-tel" href="tel:01068348080">📞 전화상담</a><a class="fab fab-sms" href="sms:01068348080">✉️ 문자상담</a><button class="fab" onclick="openForm()">💬 무료 상담</button></div>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <div class="modal" id="formModal" onclick="if(event.target===this)closeForm()">
   <div class="modal-card" id="modalCard">
