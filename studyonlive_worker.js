@@ -774,7 +774,7 @@ export default {
       const day = Math.floor(Date.now() / 86400000);
       const list = path.endsWith("/all") ? all : all.slice((day * PER) % Math.max(1, all.length), (day * PER) % Math.max(1, all.length) + PER);
       const res = await submitIndexNow(list);
-      return new Response(JSON.stringify({ requested: list.length, sent: res.sent, failed: res.failed, batches: res.batches }), { headers: { "content-type": "application/json; charset=UTF-8" } });
+      return new Response(JSON.stringify({ requested: list.length, sent: res.sent, failed: res.failed, batches: res.batches, diag: res.diag }), { headers: { "content-type": "application/json; charset=UTF-8" } });
     }
 
     if (path === "/regions.json") {
@@ -1356,7 +1356,7 @@ async function submitIndexNow(urls){
         const r=await fetch(ep,{method:"POST",headers:{"Content-Type":"application/json; charset=utf-8"},body:body});
         let rb=""; try{ rb=(await r.text()).slice(0,200); }catch(e2){}
         diag.push({batch:batches,urls:batch.length,endpoint:ep,status:r.status,body:rb});
-        if(r.status!==429){ ok=true; break; }
+        if(r.status>=200&&r.status<300){ ok=true; break; }
       }catch(e){ diag.push({batch:batches,urls:batch.length,endpoint:ep,error:String(e).slice(0,120)}); }
     }
     if(ok) sent+=batch.length; else failed+=batch.length;
