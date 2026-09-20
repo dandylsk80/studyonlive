@@ -1926,13 +1926,15 @@ footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:40px;back
 
 /* 플로팅 CTA */
 .fabwrap{position:fixed;right:22px;bottom:22px;z-index:60;display:flex;flex-direction:column;gap:11px;align-items:flex-end}
+/* 모바일: 하단 우측은 브라우저 툴바·홈 인디케이터·스크롤 동선과 겹쳐 오터치가 난다 → 화면 세로 중앙 우측으로 */
+@media(max-width:768px){.fabwrap{top:50%;bottom:auto;transform:translateY(-50%);gap:12px}}
 .fab{background:linear-gradient(100deg,var(--brand),var(--brand2));color:#fff;
   font-weight:800;font-size:15px;padding:15px 24px;border-radius:999px;border:none;cursor:pointer;text-decoration:none;
   box-shadow:0 14px 34px -10px var(--brand);transition:.2s;display:flex;align-items:center;gap:8px;white-space:nowrap}
 .fab-tel{background:linear-gradient(100deg,#16a34a,#22c55e);box-shadow:0 14px 34px -10px #16a34a;color:#fff}
 .fab-sms{background:linear-gradient(100deg,#d97706,#f59e0b);box-shadow:0 14px 34px -10px #b45309;color:#fff}
 .fab:hover{transform:translateY(-2px) scale(1.02)}
-@media(max-width:600px){.fabwrap{right:14px;bottom:14px;gap:9px}.fab{padding:13px 18px;font-size:14px}}
+@media(max-width:600px){.fabwrap{right:14px;top:50%;bottom:auto;transform:translateY(-50%);gap:12px}.fab{padding:13px 18px;font-size:14px}}
 
 /* 모달 */
 .modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
