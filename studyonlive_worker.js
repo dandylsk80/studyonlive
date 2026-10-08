@@ -1658,8 +1658,19 @@ function html(body, status = 200) {
   });
 }
 
+
+/* 모든 페이지 <title> 을 "설명 | 사이트명" 하나로 정규화 (2026-10-08 사이트명 통일) */
+function siteTitle(t){
+  const N=SITE.name; const esc=N.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); const SEP="(?:\\s*[-|·—–:]\\s*)";
+  let s=String(t||"").trim();
+  s=s.replace(new RegExp("^"+esc+SEP),"").replace(new RegExp(SEP+esc+"$"),"");
+  s=s.replace(/\s*\|\s*/g," — ").trim();
+  return (s?s+" | ":"")+N;
+}
 function layout({ title, desc, canonical, body, image }) {
+  title = siteTitle(title);
   const ogImage = image || CDN+"main/aa.jpg";
+  const siteLd = canonical===`https://${SITE.domain}/` ? '<script type="application/ld+json">'+JSON.stringify({"@context":"https://schema.org","@type":"WebSite","name":SITE.name,"alternateName":SITE.nameEn,"url":`https://${SITE.domain}/`,"inLanguage":"ko-KR"})+'</script>' : '';
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -1678,6 +1689,7 @@ function layout({ title, desc, canonical, body, image }) {
 <meta property="og:type" content="website">
 <meta property="og:url" content="${canonical}">
 <meta property="og:site_name" content="${SITE.name}">
+${siteLd}
 <meta property="og:image" content="${ogImage}">
 <meta name="robots" content="index,follow">
 <style>${CSS}</style>
