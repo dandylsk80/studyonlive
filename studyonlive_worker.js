@@ -1746,6 +1746,11 @@ header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
 .nav-cta:hover{transform:translateY(-1px)}
 .nav-tel{font-size:13.5px;font-weight:800;color:#fff;background:linear-gradient(100deg,#16a34a,#22c55e);padding:9px 16px;border-radius:999px;text-decoration:none;white-space:nowrap;box-shadow:0 6px 16px -6px #16a34a}
 .nav-tel:hover{transform:translateY(-1px)}
+/* PC(769px~)는 전화를 걸 수 없으니 tel: 버튼을 숨기고 번호를 일반 텍스트로 보인다. 모바일은 그대로 */
+.telt{display:none}
+@media(min-width:769px){a[href^="tel:"]{display:none!important}.telt{display:inline-flex;align-items:center}
+.nav-telt{font-size:13.5px;font-weight:800;color:#16a34a;white-space:nowrap}
+.fabt{background:linear-gradient(100deg,#16a34a,#22c55e);color:#fff;font-weight:800;font-size:13px;padding:8px 14px;border-radius:999px;box-shadow:0 10px 24px -10px #16a34a;white-space:nowrap}}
 @media(max-width:600px){
   .nav-in{height:64px}
   .logo{font-size:15px;gap:0}
@@ -2517,7 +2522,7 @@ body.dark-home footer .notice{color:#6b7693}
 const HEADER = `
 <header class="nav"><div class="wrap nav-in">
   <a href="/" class="logo"><span class="live-mark">LIVE</span><span class="wm">스터디<span class="on">ON</span>라이브</span></a>
-  <div style="display:flex;align-items:center;gap:8px"><a class="nav-tel" href="tel:01068348080">📞 010-6834-8080</a><button class="nav-cta" onclick="openForm()">무료 상담 신청</button></div>
+  <div style="display:flex;align-items:center;gap:8px"><a class="nav-tel" href="tel:01068348080">📞 010-6834-8080</a><span class="telt nav-telt">📞 010-6834-8080</span><button class="nav-cta" onclick="openForm()">무료 상담 신청</button></div>
 </div></header>`;
 
 const FOOTER = `
@@ -2542,7 +2547,7 @@ const FOOTER = `
 </div></footer>`;
 
 const FORM_MODAL = `
-<div class="fabwrap"><a class="fab fab-tel" href="tel:01068348080">📞 전화상담</a><a class="fab fab-sms" href="sms:01068348080">✉️ 문자상담</a><button class="fab" onclick="openForm()">💬 무료 상담</button></div>
+<div class="fabwrap"><a class="fab fab-tel" href="tel:01068348080">📞 전화상담</a><span class="telt fabt">010-6834-8080</span><a class="fab fab-sms" href="sms:01068348080">✉️ 문자상담</a><button class="fab" onclick="openForm()">💬 무료 상담</button></div>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <div class="modal" id="formModal" onclick="if(event.target===this)closeForm()">
   <div class="modal-card" id="modalCard">
