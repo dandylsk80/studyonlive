@@ -784,7 +784,7 @@ export default {
     // === 전환 추적 수집 API (상담 코드와 무관, 독립 동작) ===
     if (path === '/api/track' && request.method === 'POST') {
       try {
-        const b = await request.json();
+        const b = await request.json(); const __task=(async()=>{ try{
     /* 같은 방문자가 같은 버튼을 반복해 눌러도 1건만 기록·발송한다 */
     if (await tkDup(env, 'studyonlive', b.type, (b.page || '').slice(0, 300), request.headers.get('CF-Connecting-IP') || '')) {
       return new Response(JSON.stringify({ ok: true, dup: 1 }), { headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' } });
@@ -801,7 +801,7 @@ export default {
           await env.DB.prepare('INSERT INTO events (site,type,page,ref,ip,ts,ua,device,source,keyword) VALUES (?,?,?,?,?,?,?,?,?,?)')
             .bind('studyonlive', b.type, (b.page||'').slice(0,300), (b.ref||'').slice(0,120), ip, ts, ...tkMeta(request.headers.get('User-Agent')||'', b.ref||'', 'studyonlive.com', b.q||"")).run();
         }
-      } catch(e) {}
+      }catch(e){ console.log('[track] fail', e&&e.message); } })(); if(ctx&&ctx.waitUntil) ctx.waitUntil(__task); else await __task; } catch(e) {}
       return new Response(JSON.stringify({ok:true}), { headers: { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' } });
     }
     if (path === '/api/track' && request.method === 'OPTIONS') {
