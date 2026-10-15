@@ -812,6 +812,8 @@ export default {
       return handleInquiry(request, env);
     }
 
+    if (path === "/og.jpg") return ogHomeJpg(request, ctx);
+
     // robots.txt
     if (path === "/robots.txt") {
       return new Response(
@@ -1669,9 +1671,28 @@ function siteTitle(t){
   s=s.replace(/\s*\|\s*/g," — ").trim();
   return (s?s+" | ":"")+N;
 }
+/* 홈·기본 og:image — jsDelivr 가 간헐적으로 503/접속 불가(2026-10-15 확인)라 워커가 직접 서빙한다. GitHub raw → jsDelivr 순으로 받아 엣지 캐시 */
+const OG_HOME_SRC = ["https://raw.githubusercontent.com/dandylsk80/studyonlive/main/image/og/aa.jpg", CDN+"og/aa.jpg"];
+async function ogHomeJpg(request, ctx) {
+  const key = new Request("https://"+SITE.domain+"/og.jpg?v=1", { method: "GET" });
+  const cache = (typeof caches !== "undefined" && caches.default) ? caches.default : null;
+  if (cache) { try { const hit = await cache.match(key); if (hit) return hit; } catch (e) {} }
+  for (const src of OG_HOME_SRC) {
+    try {
+      const r = await fetch(src);
+      if (r.ok) {
+        const body = await r.arrayBuffer();
+        const res = new Response(body, { headers: { "content-type": "image/jpeg", "cache-control": "public, max-age=31536000, immutable" } });
+        if (cache && ctx && ctx.waitUntil) ctx.waitUntil(cache.put(key, res.clone()));
+        return res;
+      }
+    } catch (e) {}
+  }
+  return new Response("og image unavailable", { status: 502 });
+}
 function layout({ title, desc, canonical, body, image }) {
   title = siteTitle(title);
-  const ogImage = image || CDN+"og/aa.jpg";
+  const ogImage = image || "https://"+SITE.domain+"/og.jpg";
   const siteLd = canonical===`https://${SITE.domain}/` ? '<script type="application/ld+json">'+JSON.stringify({"@context":"https://schema.org","@type":"WebSite","name":SITE.name,"alternateName":SITE.nameEn,"url":`https://${SITE.domain}/`,"inLanguage":"ko-KR"})+'</script>' : '';
   return `<!DOCTYPE html>
 <html lang="ko">
