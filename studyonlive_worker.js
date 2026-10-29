@@ -1851,7 +1851,8 @@ async function indexnowDaily(env, source, dry, force){
   const next = Object.assign({}, prev || {}), today = new Date().toISOString().slice(0, 10);
   /* URL 이 적은 유형(100개 이하)은 한 묶음으로 합쳐 보낸다 — 루트 URL 하나만 담긴 배치는 네이버가 422 를 준다 */
   const small = changed.filter(t => types[t].length <= 100), big = changed.filter(t => types[t].length > 100);
-  const mark = (ts, ok) => { if (!ok) return; for (const t of ts) { if (!prev || prev[t] !== fp[t]) dates[t] = today; next[t] = fp[t]; } };
+  /* 첫 실행(저장된 지문 없음)은 "지금 바뀐 것"이 아니라 이 방식 배포 시점 상태라 SM_FALLBACK_DATE 로 적는다 */
+  const mark = (ts, ok) => { if (!ok) return; for (const t of ts) { if (!prev || prev[t] !== fp[t]) dates[t] = prev ? today : SM_FALLBACK_DATE; next[t] = fp[t]; } };
   if (small.length) {
     let urls = []; for (const t of small) urls = urls.concat(types[t]);
     if (urls.length === 1 && /^https?:\/\/[^/]+\/?$/.test(urls[0])) urls.push(IN_ORIGIN + "/list");
