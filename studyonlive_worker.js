@@ -1763,10 +1763,9 @@ const INDEXNOW_ENDPOINTS = [
    루트 URL 하나만 담긴 배치는 422 "Invalid urls" 지만 하위 경로가 섞이면 200 이다(2026-09-21 실측). */
 const INDEXNOW_NAVER_EP = "https://searchadvisor.naver.com/indexnow";
 async function indexnowNaver(body){
-  try{
-    const r=await fetch(INDEXNOW_NAVER_EP,{method:"POST",headers:{"content-type":"application/json; charset=utf-8"},body});
-    return r.status;
-  }catch(e){ return 0; }
+  /* 2026-10-30 네이버 IndexNow 중단(네이버 유입 급감 대응). 보내지 않고 "off" 를 남긴다.
+     새 정보성 글만 allcarestudy 크론(publishDuePosts)이 하루 10건까지 네이버에 보낸다. */
+  return "off";
 }
 
 /* ── IndexNow: 사이트맵 URL 중 바뀐 유형만 + 새 글 (2026-10-27, allpaystore·24payshop 방식) ─────────
@@ -1807,7 +1806,7 @@ async function inSubmit(env, urls, source, note){
     const body = JSON.stringify({ host: IN_HOST, key: INDEXNOW_KEY, keyLocation: IN_ORIGIN + "/" + INDEXNOW_KEY + ".txt", urlList: batch });
     const opt = { method: "POST", headers: { "content-type": "application/json; charset=utf-8" }, body };
     let naver = 0, chain = 0, ep = "";
-    try { naver = (await fetch("https://searchadvisor.naver.com/indexnow", opt)).status; } catch (e) { naver = -1; }
+    try { naver = "off" /* 2026-10-30 네이버 IndexNow 중단 — 새 글만 allcarestudy 크론이 보낸다 */; } catch (e) { naver = -1; }
     for (const e of IN_EPS) { try { const r = await fetch(e, opt); chain = r.status; ep = e; if (r.status >= 200 && r.status < 300) break; } catch (x) {} }
     const good = (naver >= 200 && naver < 300) || (chain >= 200 && chain < 300);
     if (!good) ok = false;
